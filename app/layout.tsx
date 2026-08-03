@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Cormorant_Garamond } from "next/font/google";
+import Footer from "./components/layout/Footer";
+import Header from "./components/layout/Header";
+import CartDrawer from "./components/ui/CartDrawer";
+import { CartProvider } from "./lib/cart-store";
 import "./globals.css";
 
 const inter = Inter({
@@ -14,7 +18,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "Anatolii Lukianchuk",
-  description: "Private Chef in Valencia",
+  description: "Private Chef in Barcelona",
 };
 
 export default function RootLayout({
@@ -27,7 +31,12 @@ export default function RootLayout({
       <body
         className={`${inter.className} ${cormorant.variable} min-h-screen`}
       >
-        {children}
+        <CartProvider>
+          <Header />
+          {children}
+          <Footer />
+          <CartDrawer />
+        </CartProvider>
       </body>
     </html>
   );

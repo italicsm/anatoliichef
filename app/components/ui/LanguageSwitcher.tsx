@@ -16,7 +16,7 @@ export default function LanguageSwitcher({
   return (
     <nav
       aria-label="Language"
-      className={`flex items-center gap-4 text-xs uppercase tracking-[0.2em] ${className}`}
+      className={`flex items-center gap-4 text-sm uppercase tracking-[0.2em] ${className}`}
     >
       {locales.map((locale) => (
         <span
@@ -25,7 +25,7 @@ export default function LanguageSwitcher({
           className={
             locale === activeLocale
               ? "text-zinc-900"
-              : "text-zinc-400 transition hover:text-zinc-900"
+              : "text-zinc-500 transition hover:text-zinc-900"
           }
         >
           {locale}
