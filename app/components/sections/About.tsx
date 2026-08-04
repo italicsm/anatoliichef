@@ -100,20 +100,20 @@ export default function About() {
           </ul>
         </div>
 
-        <dl className="mt-28 grid gap-x-12 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+        <dl className="mt-16 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
           {facts.map((fact) => (
             <div key={fact.term} className="border-t border-zinc-200 pt-6">
               <dt className="text-sm uppercase tracking-[0.2em] text-zinc-800">
                 {fact.term}
               </dt>
-              <dd className="mt-4 text-sm leading-6 text-zinc-500">
+              <dd className="mt-4 font-serif text-xl leading-8 text-zinc-500">
                 {fact.description}
               </dd>
             </div>
           ))}
         </dl>
 
-        <blockquote className="mx-auto mt-32 max-w-2xl text-center">
+        <blockquote className="mx-auto mt-20 max-w-2xl text-center">
           <p className="font-serif text-3xl leading-snug text-zinc-700">
             The best memories begin around one table.
           </p>

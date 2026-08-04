@@ -33,6 +33,9 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
+# order log — contains customer names and phone numbers
+orders.jsonl
+
 # vercel
 .vercel
 

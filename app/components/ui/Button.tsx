@@ -10,7 +10,7 @@ type ButtonProps = {
 };
 
 const baseStyles =
-  "inline-flex items-center justify-center rounded-full bg-black text-white transition hover:bg-zinc-800";
+  "inline-flex items-center justify-center rounded-full bg-zinc-700 text-white transition-colors hover:bg-black";
 
 const sizeStyles: Record<ButtonSize, string> = {
   sm: "px-7 py-3",

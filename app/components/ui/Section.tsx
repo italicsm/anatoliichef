@@ -8,9 +8,9 @@ type SectionProps = {
 };
 
 const spacingStyles: Record<SectionSpacing, string> = {
-  sm: "py-16 md:py-20",
-  md: "py-24 md:py-32",
-  lg: "py-32 md:py-44",
+  sm: "py-12 md:py-14",
+  md: "py-16 md:py-20",
+  lg: "py-20 md:py-28",
 };
 
 export default function Section({

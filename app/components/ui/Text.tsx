@@ -7,10 +7,12 @@ type TextProps = {
   className?: string;
 };
 
+// Cormorant runs small for its point size, so every step is one notch up
+// from the equivalent sans setting.
 const sizeStyles: Record<TextSize, string> = {
-  sm: "text-sm leading-6",
-  md: "text-base leading-7",
-  lg: "text-lg leading-8",
+  sm: "text-xl leading-8",
+  md: "text-2xl leading-9",
+  lg: "text-3xl leading-10",
 };
 
 export default function Text({
@@ -21,7 +23,7 @@ export default function Text({
 }: TextProps) {
   return (
     <p
-      className={`${sizeStyles[size]} ${
+      className={`font-serif ${sizeStyles[size]} ${
         muted ? "text-zinc-500" : "text-zinc-600"
       } ${className}`}
     >

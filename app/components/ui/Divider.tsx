@@ -7,9 +7,9 @@ type DividerProps = {
 
 const spacingStyles: Record<DividerSpacing, string> = {
   none: "my-0",
-  sm: "my-8",
-  md: "my-12",
-  lg: "my-20",
+  sm: "my-6",
+  md: "my-10",
+  lg: "my-14",
 };
 
 export default function Divider({

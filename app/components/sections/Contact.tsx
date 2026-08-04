@@ -3,6 +3,7 @@ import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import Heading from "../ui/Heading";
 import Section from "../ui/Section";
+import SocialLinks from "../ui/SocialLinks";
 import Text from "../ui/Text";
 
 /**
@@ -23,18 +24,6 @@ const contactDetails: ContactDetail[] = [
     href: "mailto:hello@anatoliilukianchuk.com",
   },
   { label: "Location", value: "Barcelona, Spain" },
-];
-
-type SocialLink = {
-  label: string;
-  href: string;
-};
-
-const socialLinks: SocialLink[] = [
-  { label: "Telegram", href: "https://t.me/anatoliichef" },
-  { label: "WhatsApp", href: "https://wa.me/34600000000" },
-  { label: "Instagram", href: "https://instagram.com/anatoliichef" },
-  { label: "Facebook", href: "https://facebook.com/anatoliichef" },
 ];
 
 export default function Contact() {
@@ -94,20 +83,7 @@ export default function Contact() {
             <div className="mt-12">
               <Eyebrow className="text-sm">Elsewhere</Eyebrow>
 
-              <ul className="mt-6 flex flex-wrap gap-x-10 gap-y-4">
-                {socialLinks.map((link) => (
-                  <li key={link.label}>
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm uppercase tracking-[0.2em] text-zinc-800 transition-colors hover:text-zinc-500"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <SocialLinks className="mt-6" />
             </div>
           </div>
         </div>

@@ -61,7 +61,7 @@ export default function DishCard({
           </p>
         ) : null}
 
-        <p className="mt-4 text-sm leading-6 text-zinc-500">
+        <p className="mt-4 font-serif text-xl leading-8 text-zinc-500">
           {t(dish.description)}
         </p>
 

@@ -8,8 +8,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  /* Cormorant Garamond, loaded in layout.tsx as --font-title. */
-  --font-serif: var(--font-title);
+  /*
+   * Semantic type roles. The families themselves are declared in app/fonts.ts;
+   * these four lines are the only place a role is bound to a family.
+   */
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-cormorant);
+  --font-signature: var(--font-nautigal);
 }
 
 html {
@@ -68,22 +73,33 @@ body {
   }
 }
 
-/* Same technique as .zoom-dialog, sliding in from the right edge. */
+/*
+ * Same technique as .zoom-dialog, but the panel enters and leaves in
+ * different directions: it slides in from the right edge, and on close it
+ * drifts left into the page while fading out.
+ *
+ * The base rule is the exit state, @starting-style is the entry state — that
+ * asymmetry is what makes the two directions possible.
+ */
 .drawer-dialog {
-  transform: translateX(100%);
+  transform: translateX(-3rem);
+  opacity: 0;
   transition:
     transform 300ms ease-out,
+    opacity 250ms ease-out,
     overlay 300ms ease-out allow-discrete,
     display 300ms ease-out allow-discrete;
 }
 
 .drawer-dialog[open] {
   transform: translateX(0);
+  opacity: 1;
 }
 
 @starting-style {
   .drawer-dialog[open] {
     transform: translateX(100%);
+    opacity: 1;
   }
 }
 

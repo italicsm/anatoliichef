@@ -1,20 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, Cormorant_Garamond } from "next/font/google";
 import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
 import CartDrawer from "./components/ui/CartDrawer";
+import { fontVariables } from "./fonts";
 import { CartProvider } from "./lib/cart-store";
 import "./globals.css";
-
-const inter = Inter({
-  subsets: ["latin"],
-});
-
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  variable: "--font-title",
-});
 
 export const metadata: Metadata = {
   title: "Anatolii Lukianchuk",
@@ -29,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} ${cormorant.variable} min-h-screen`}
+        className={`${fontVariables} min-h-screen`}
       >
         <CartProvider>
           <Header />

@@ -83,7 +83,7 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
               </Heading>
             </div>
 
-            <ul className="mt-14 grid gap-x-14 gap-y-20 md:grid-cols-2 lg:grid-cols-3">
+            <ul className="mt-10 grid gap-x-14 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
               {dishes.map((placedDish) => (
                 <li key={placedDish.placement.id} className="flex">
                   <DishCard placedDish={placedDish} menuSlug={menuSlug} />
@@ -98,7 +98,7 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
         <Container>
           <Divider spacing="none" />
 
-          <div className="mt-20 text-center">
+          <div className="mt-14 text-center">
             <Heading level={2} size="xl">
               Ready to plan your event?
             </Heading>

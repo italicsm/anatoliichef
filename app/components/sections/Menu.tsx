@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { t } from "../../lib/i18n";
 import { getMenuTypes } from "../../lib/menu";
+import BoldOnHover from "../ui/BoldOnHover";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import Heading from "../ui/Heading";
@@ -27,7 +28,7 @@ export default async function Menu() {
           </Text>
         </div>
 
-        <ul className="mt-20 grid gap-12 md:grid-cols-2 md:gap-16">
+        <ul className="mt-14 grid gap-12 md:grid-cols-2 md:gap-16">
           {menuTypes.map((menuType) => (
             <li key={menuType.id}>
               <Link href={`/${menuType.slug}`} className="group block">
@@ -50,8 +51,8 @@ export default async function Menu() {
                   {t(menuType.description)}
                 </Text>
 
-                <span className="mt-8 inline-block text-sm uppercase tracking-[0.2em] text-zinc-800 transition-colors group-hover:text-zinc-500">
-                  View menu
+                <span className="mt-8 inline-block border-b border-zinc-300 pb-3 text-sm uppercase tracking-[0.25em] text-zinc-800 transition-colors group-hover:border-zinc-900">
+                  <BoldOnHover>View menu</BoldOnHover>
                 </span>
               </Link>
             </li>

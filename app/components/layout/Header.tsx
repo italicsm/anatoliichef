@@ -45,7 +45,7 @@ export default function Header() {
             <Button
               href="/#contact"
               size="sm"
-              className="text-sm uppercase tracking-[0.15em]"
+              className="whitespace-nowrap text-sm uppercase tracking-[0.15em]"
             >
               Reserve a Dinner
             </Button>
