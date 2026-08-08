@@ -18,7 +18,11 @@ import {
   type CartLineDraft,
 } from "./cart";
 
-const STORAGE_KEY = "anatolii-cart-v1";
+// Bumped when placement ids changed shape: the mock used readable slugs, the
+// database issues uuids, so a cart saved before the migration can no longer be
+// priced. A new key drops those carts silently instead of showing the guest an
+// order that cannot be placed.
+const STORAGE_KEY = "anatolii-cart-v2";
 
 type CartContextValue = {
   lines: CartLine[];

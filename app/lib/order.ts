@@ -1,6 +1,7 @@
 import { categories, dishes, menuTypes, placements } from "./menu-data";
-import { t } from "./i18n";
+import { t, type Translated } from "./i18n";
 import { formatPrice } from "./format";
+import { getReadClient } from "./supabase";
 import type { MenuTypeSlug } from "./types";
 
 /** What the browser is allowed to send: an id and a quantity. Nothing else. */
@@ -178,20 +179,78 @@ export function parseOrderInput(body: unknown): {
   };
 }
 
-/**
- * Rebuilds the order from our own tables. Returns null when an item refers to
- * a placement that no longer exists — the menu may have changed while the
- * cart sat in localStorage.
- */
-export async function resolveOrder(
-  input: OrderInput
-): Promise<{ order?: ResolvedOrder; errors: ValidationError[] }> {
-  const lines: ResolvedOrderLine[] = [];
+type PricedPlacement = {
+  menuSlug: MenuTypeSlug;
+  categoryTitle: string;
+  dishTitle: string;
+  portion: string | null;
+  price: number;
+};
 
-  for (const item of input.items) {
-    const placement = placements.find(
-      (candidate) => candidate.id === item.placementId
-    );
+/** Authoritative prices, straight from the database. */
+async function readPlacementsFromDatabase(
+  placementIds: string[]
+): Promise<Map<string, PricedPlacement> | null> {
+  const client = getReadClient();
+
+  if (!client) {
+    return null;
+  }
+
+  const { data, error } = await client
+    .from("placements")
+    .select(
+      `id, price, portion,
+       dishes ( title, is_active ),
+       categories ( title, menu_types ( slug ) )`
+    )
+    .in("id", placementIds);
+
+  if (error || !data) {
+    console.error("[order] could not read placements", error);
+
+    return null;
+  }
+
+  type Row = {
+    id: string;
+    price: number;
+    portion: string | null;
+    dishes: { title: Translated; is_active: boolean } | null;
+    categories:
+      | { title: Translated; menu_types: { slug: string } | null }
+      | null;
+  };
+
+  const priced = new Map<string, PricedPlacement>();
+
+  for (const row of data as unknown as Row[]) {
+    const menuSlug = row.categories?.menu_types?.slug;
+
+    if (!row.dishes?.is_active || !row.categories || !menuSlug) {
+      continue;
+    }
+
+    priced.set(row.id, {
+      menuSlug: menuSlug as MenuTypeSlug,
+      categoryTitle: t(row.categories.title),
+      dishTitle: t(row.dishes.title),
+      portion: row.portion,
+      price: row.price,
+    });
+  }
+
+  return priced;
+}
+
+/** The same lookup against the in-memory source, used before Supabase exists. */
+function readPlacementsFromMock(
+  placementIds: string[]
+): Map<string, PricedPlacement> {
+  const priced = new Map<string, PricedPlacement>();
+
+  for (const id of placementIds) {
+    const placement = placements.find((candidate) => candidate.id === id);
 
     if (!placement) {
       continue;
@@ -209,11 +268,47 @@ export async function resolveOrder(
       continue;
     }
 
-    lines.push({
-      placementId: placement.id,
+    priced.set(id, {
       menuSlug: menuType.slug,
       categoryTitle: t(category.title),
       dishTitle: t(dish.title),
+      portion: placement.portion,
+      price: placement.price,
+    });
+  }
+
+  return priced;
+}
+
+/**
+ * Rebuilds the order from authoritative data. Anything the browser claimed
+ * about money is discarded here; an item whose placement no longer exists is
+ * dropped, because the menu may have changed while the cart sat in
+ * localStorage.
+ */
+export async function resolveOrder(
+  input: OrderInput
+): Promise<{ order?: ResolvedOrder; errors: ValidationError[] }> {
+  const placementIds = input.items.map((item) => item.placementId);
+
+  const priced =
+    (await readPlacementsFromDatabase(placementIds)) ??
+    readPlacementsFromMock(placementIds);
+
+  const lines: ResolvedOrderLine[] = [];
+
+  for (const item of input.items) {
+    const placement = priced.get(item.placementId);
+
+    if (!placement) {
+      continue;
+    }
+
+    lines.push({
+      placementId: item.placementId,
+      menuSlug: placement.menuSlug,
+      categoryTitle: placement.categoryTitle,
+      dishTitle: placement.dishTitle,
       portion: placement.portion,
       price: placement.price,
       quantity: item.quantity,

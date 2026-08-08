@@ -49,12 +49,12 @@ export default function ZoomableImage({
         onClick={() => dialogRef.current?.close()}
         className="zoom-dialog fixed inset-0 m-auto max-h-none max-w-none bg-transparent p-0 backdrop:bg-white/70"
       >
-        <div className="relative h-[62svh] w-[46vw] cursor-zoom-out">
+        <div className="relative h-[62svh] w-[88vw] cursor-zoom-out sm:w-[46vw]">
           <Image
             src={src}
             alt={alt}
             fill
-            sizes="46vw"
+            sizes="(min-width: 640px) 46vw, 88vw"
             quality={100}
             className="object-contain"
           />

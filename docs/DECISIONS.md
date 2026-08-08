@@ -200,6 +200,48 @@ container of its own height, it would stick for zero pixels.
 
 ---
 
+## Supabase
+
+### The seam held
+
+Migrating from the in-memory source to Postgres changed four files in `lib/`
+and not a single component. That was the whole point of making every query
+async and giving pages read models instead of tables, months before there was
+a database to read from.
+
+### Missing configuration degrades, it never throws
+
+Both client factories return `null` when their variables are absent. No
+Supabase means the mock data; no service role key means the file log. A dead
+database must not take the site down, and an unreachable one must not lose an
+order that Telegram already delivered.
+
+The failure is always logged. A silent fallback that looks like success is the
+one outcome worth engineering against.
+
+### Both env naming schemes are accepted
+
+`SUPABASE_URL` / `SUPABASE_PUBLISHABLE_KEY` / `SUPABASE_SECRET_KEY` and the
+older `NEXT_PUBLIC_*` / `SERVICE_ROLE` names both work. A variable set under
+the other name would otherwise leave the site quietly serving mock data.
+
+### Connect through the pooler, not the direct host
+
+`db.<ref>.supabase.co` resolves over IPv6 only unless the IPv4 add-on is paid
+for; it is unreachable from most sandboxes, CI runners and build environments.
+Migrations run through the session pooler on port 5432. Transaction mode is
+the wrong choice for DDL — it does not hold prepared statements.
+
+### Order rows are written by the server alone
+
+Row level security is on for all seven tables, with select-only policies on the
+five menu tables and no policies at all on `orders` and `order_items`. With RLS
+on and no policy, the publishable key sees an empty table rather than an error,
+which is exactly the intended protection. Writes go through the secret key,
+inside route handlers only.
+
+---
+
 ## Verification
 
 Rules earned by getting them wrong. Intended as the working brief for a future
@@ -236,6 +278,12 @@ ancestor an absolutely or stickily positioned element is measured against:
 
 Both were invisible to the type checker and to a quick glance at the diff.
 When an element is positioned, name its containing block out loud.
+
+### Prove a claim with data the client can see
+
+"The site now reads the database" is unverifiable from the outside. Changing a
+single price to 9,99 € and asking which number appears on the page is not.
+When a claim cannot be tested directly, engineer a signal that can.
 
 ### Prefer a cause over a coincidence
 

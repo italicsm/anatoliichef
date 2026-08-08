@@ -121,6 +121,29 @@ body {
   }
 }
 
+/* Full-screen mobile menu: fades in while settling down a few pixels. */
+.menu-dialog {
+  opacity: 0;
+  transform: translateY(-0.75rem);
+  transition:
+    opacity 220ms ease-out,
+    transform 220ms ease-out,
+    overlay 220ms ease-out allow-discrete,
+    display 220ms ease-out allow-discrete;
+}
+
+.menu-dialog[open] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@starting-style {
+  .menu-dialog[open] {
+    opacity: 0;
+    transform: translateY(-0.75rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -129,7 +152,8 @@ body {
   .zoom-dialog,
   .zoom-dialog::backdrop,
   .drawer-dialog,
-  .drawer-dialog::backdrop {
+  .drawer-dialog::backdrop,
+  .menu-dialog {
     transition-duration: 1ms;
   }
 }

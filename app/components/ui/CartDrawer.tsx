@@ -51,7 +51,7 @@ export default function CartDrawer() {
         }
       }}
       aria-label="Cart"
-      className="drawer-dialog fixed inset-y-0 right-0 m-0 h-full max-h-none w-[28rem] max-w-none bg-white p-0 backdrop:bg-white/70"
+      className="drawer-dialog fixed inset-y-0 right-0 m-0 h-full max-h-none w-full max-w-none bg-white p-0 backdrop:bg-white/70 sm:w-[28rem]"
     >
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-between border-b border-zinc-200 px-8 py-6">

@@ -7,6 +7,7 @@ import CartButton from "../ui/CartButton";
 import Container from "../ui/Container";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import Logo from "../ui/Logo";
+import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
 
 const SCROLL_THRESHOLD = 16;
@@ -32,9 +33,10 @@ export default function Header() {
       }`}
     >
       <Container>
-        <div className="flex h-20 items-center justify-between gap-10">
+        <div className="flex h-20 items-center justify-between gap-6 md:gap-10">
           <Link href="/" aria-label="Anatolii Lukianchuk — home">
-            <Logo size="md" />
+            <Logo size="sm" className="md:hidden" />
+            <Logo size="md" className="hidden md:inline-block" />
           </Link>
 
           <Nav className="hidden md:block" />
@@ -49,6 +51,13 @@ export default function Header() {
             >
               Reserve a Dinner
             </Button>
+          </div>
+
+          {/* The cart stays reachable on small screens; everything else moves
+              into the panel. */}
+          <div className="flex items-center gap-5 md:hidden">
+            <CartButton />
+            <MobileMenu />
           </div>
         </div>
       </Container>

@@ -7,6 +7,8 @@ type ButtonProps = {
   href?: string;
   size?: ButtonSize;
   className?: string;
+  /** Runs on click in both forms — a link still needs it to dismiss a panel. */
+  onClick?: () => void;
 };
 
 const baseStyles =
@@ -22,19 +24,20 @@ export default function Button({
   href,
   size = "md",
   className = "",
+  onClick,
 }: ButtonProps) {
   const styles = `${baseStyles} ${sizeStyles[size]} ${className}`;
 
   if (href) {
     return (
-      <Link href={href} className={styles}>
+      <Link href={href} className={styles} onClick={onClick}>
         {children}
       </Link>
     );
   }
 
   return (
-    <button type="button" className={styles}>
+    <button type="button" className={styles} onClick={onClick}>
       {children}
     </button>
   );

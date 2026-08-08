@@ -1,21 +1,6 @@
 import Link from "next/link";
+import { navItems } from "../../lib/navigation";
 import BoldOnHover from "../ui/BoldOnHover";
-
-type NavItem = {
-  label: string;
-  href: string;
-};
-
-/**
- * Absolute hashes (`/#about`) so the links also work from the menu routes.
- * Gallery is intentionally absent until the section exists.
- */
-const navItems: NavItem[] = [
-  { label: "Фуршет", href: "/furshet" },
-  { label: "Банкет", href: "/banquet" },
-  { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
-];
 
 type NavProps = {
   className?: string;
