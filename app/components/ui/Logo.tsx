@@ -20,7 +20,10 @@ const sizeStyles: Record<LogoSize, string> = {
 export default function Logo({ size = "md", className = "" }: LogoProps) {
   return (
     <span
-      className={`font-signature whitespace-nowrap leading-none text-zinc-900 ${sizeStyles[size]} ${className}`}
+      // The script face carries tall ascenders, so its box sits lower than the
+      // ink. The em-relative nudge lifts it back onto the optical baseline of
+      // the row and scales with whatever size is used.
+      className={`inline-block -translate-y-[0.12em] font-signature whitespace-nowrap leading-none text-zinc-900 ${sizeStyles[size]} ${className}`}
     >
       Anatolii Lukianchuk
     </span>

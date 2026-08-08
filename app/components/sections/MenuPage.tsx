@@ -49,7 +49,7 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
             </div>
 
             <div className="md:col-span-5">
-              <Text size="lg">{t(menuType.description)}</Text>
+              <Text size="sm">{t(menuType.description)}</Text>
             </div>
           </div>
         </Container>
