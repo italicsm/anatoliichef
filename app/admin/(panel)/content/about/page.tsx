@@ -1,4 +1,3 @@
-import AdminField from "../../../../components/admin/AdminField";
 import ContentForm from "../../../../components/admin/ContentForm";
 import ImageField from "../../../../components/admin/ImageField";
 import { getAboutContent } from "../../../../lib/site-content";
@@ -21,55 +20,21 @@ export default async function AboutContentPage() {
       </p>
 
       <div className="mt-10">
-        <ContentForm action={saveAboutAction}>
-          <AdminField
-            label="Заголовок"
-            name="headingUk"
-            defaultValue={content.heading.uk}
-          />
-          <AdminField
-            label="Заголовок англійською"
-            name="headingEn"
-            defaultValue={content.heading.en}
-          />
-
-          <AdminField
-            label="Текст"
-            name="bodyUk"
-            multiline
-            defaultValue={content.body.uk}
-          />
-          <AdminField
-            label="Текст англійською"
-            name="bodyEn"
-            multiline
-            defaultValue={content.body.en}
-          />
-
-          <AdminField
-            label="Спеціалізації"
-            name="specialitiesUk"
-            multiline
-            defaultValue={content.specialities.uk}
-          />
-          <AdminField
-            label="Спеціалізації англійською"
-            name="specialitiesEn"
-            multiline
-            defaultValue={content.specialities.en}
-          />
-
-          <AdminField
-            label="Цитата"
-            name="quoteUk"
-            defaultValue={content.quote.uk}
-          />
-          <AdminField
-            label="Цитата англійською"
-            name="quoteEn"
-            defaultValue={content.quote.en}
-          />
-
+        <ContentForm
+          action={saveAboutAction}
+          context="the «About the chef» section of a private chef's website: a heading, a short biography, a list of specialities and a personal quote"
+          fields={[
+            { name: "heading", label: "Заголовок", value: content.heading },
+            { name: "body", label: "Текст", multiline: true, value: content.body },
+            {
+              name: "specialities",
+              label: "Спеціалізації",
+              multiline: true,
+              value: content.specialities,
+            },
+            { name: "quote", label: "Цитата", value: content.quote },
+          ]}
+        >
           <div className="md:col-span-2">
             <ImageField
               label="Портрет"

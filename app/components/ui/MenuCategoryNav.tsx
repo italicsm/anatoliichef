@@ -11,9 +11,13 @@ export type MenuCategoryNavItem = {
 
 type MenuCategoryNavProps = {
   items: MenuCategoryNavItem[];
+  label: string;
 };
 
-export default function MenuCategoryNav({ items }: MenuCategoryNavProps) {
+export default function MenuCategoryNav({
+  items,
+  label,
+}: MenuCategoryNavProps) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? "");
 
   useEffect(() => {
@@ -47,7 +51,7 @@ export default function MenuCategoryNav({ items }: MenuCategoryNavProps) {
 
   return (
     <nav
-      aria-label="Menu categories"
+      aria-label={label}
       className="sticky top-20 z-30 border-b border-zinc-200 bg-white/90 backdrop-blur"
     >
       <Container>

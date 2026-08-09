@@ -57,6 +57,33 @@ adding a language is adding a key; with plain strings it would be a rewrite of
 every component. A missing translation shows another language rather than an
 empty space.
 
+### A missing translation is left missing
+
+`readTranslated` writes only the languages that were actually filled in. The
+earlier `en: en || uk` fallback copied Ukrainian into the English column, which
+is how «Фуршет» became the English name of the buffet menu: the row looked
+translated to every reader, and the panel had no way to show which fields still
+needed work. A missing key falls back to Ukrainian at render time anyway — the
+difference is that the gap stays visible.
+
+**Consequence.** Rows written before this rule were cleaned in the database:
+`update … set title = title - 'en' where title->>'en' = title->>'uk'`.
+
+### Translation is one shared action, not one per entity
+
+`translateFields` takes a bag of named Ukrainian strings and a sentence saying
+what the text is; dishes, categories, menus and the page blocks all use it
+through a single server action and a single `TranslateButton`. Adding a
+translatable field anywhere costs one line.
+
+**Why a server action rather than a route.** The Gemini key is read from the
+database on the server and never reaches the browser. The browser posts
+Ukrainian text and receives translated text — nothing else crosses.
+
+**Why a button and not on save.** Translating and saving are separate
+decisions. The chef presses translate, reads what came back, corrects it, and
+only then saves. Nothing generated reaches the database unreviewed.
+
 ### The server prices the order
 
 `POST /api/orders` accepts only ids and quantities. Titles, portions and

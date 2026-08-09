@@ -1,8 +1,12 @@
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
 import Container from "../ui/Container";
 import Divider from "../ui/Divider";
 import Logo from "../ui/Logo";
 
-export default function Footer() {
+export default function Footer({ locale }: { locale: Locale }) {
+  const dictionary = getDictionary(locale);
+
   return (
     <footer>
       <Container>
@@ -12,7 +16,7 @@ export default function Footer() {
           <Logo size="sm" />
 
           <p className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-            Private Chef · Barcelona, Spain · © 2026
+            {dictionary.footer.role} · {dictionary.footer.city} · © 2026
           </p>
         </div>
       </Container>

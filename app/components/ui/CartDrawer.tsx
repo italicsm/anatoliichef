@@ -4,6 +4,8 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { groupByMenu } from "../../lib/cart";
 import { useCart } from "../../lib/cart-store";
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
 import { formatPrice } from "../../lib/format";
 import { t } from "../../lib/i18n";
 import { menuTypeLabels } from "../../lib/menu-labels";
@@ -14,11 +16,12 @@ import Text from "./Text";
 
 type Step = "cart" | "form" | "done";
 
-export default function CartDrawer() {
+export default function CartDrawer({ locale }: { locale: Locale }) {
   const { lines, total, isOpen, close, setQuantity, remove, clear } = useCart();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [step, setStep] = useState<Step>("cart");
   const [orderNumber, setOrderNumber] = useState("");
+  const dictionary = getDictionary(locale);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -50,32 +53,33 @@ export default function CartDrawer() {
           close();
         }
       }}
-      aria-label="Cart"
+      aria-label={dictionary.cart.title}
       className="drawer-dialog fixed inset-y-0 right-0 m-0 h-full max-h-none w-full max-w-none bg-white p-0 backdrop:bg-white/70 sm:w-[28rem]"
     >
       <div className="flex h-full flex-col">
         <div className="flex items-center justify-between border-b border-zinc-200 px-8 py-6">
           <Eyebrow className="text-sm">
-            {step === "form" ? "Your details" : "Cart"}
+            {step === "form" ? dictionary.cart.details : dictionary.cart.title}
           </Eyebrow>
 
           <button
             type="button"
             onClick={close}
-            aria-label="Close cart"
+            aria-label={dictionary.cart.close}
             className="text-sm uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-zinc-900"
           >
-            Close
+            {dictionary.cart.close}
           </button>
         </div>
 
         {step === "done" ? (
           <div className="flex flex-1 flex-col justify-center px-8 text-center">
-            <p className="text-xl text-zinc-900">Thank you.</p>
+            <p className="text-xl text-zinc-900">
+              {dictionary.cart.thanksTitle}
+            </p>
 
             <Text muted className="mx-auto mt-4 max-w-xs">
-              Your order has been sent. I will call you back shortly to confirm
-              the details.
+              {dictionary.cart.thanksBody}
             </Text>
 
             <button
@@ -83,7 +87,7 @@ export default function CartDrawer() {
               onClick={close}
               className="mx-auto mt-10 border-b border-zinc-300 pb-1 text-xs uppercase tracking-[0.25em] text-zinc-500 transition-colors hover:border-zinc-900 hover:text-zinc-900"
             >
-              Close
+              {dictionary.cart.close}
             </button>
           </div>
         ) : null}
@@ -91,6 +95,7 @@ export default function CartDrawer() {
         {step === "form" ? (
           <div className="flex-1 overflow-hidden">
             <CheckoutForm
+              locale={locale}
               onBack={() => setStep("cart")}
               onSuccess={(number) => {
                 setOrderNumber(number);
@@ -105,13 +110,13 @@ export default function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-8">
               {groups.length === 0 ? (
                 <Text muted className="py-12">
-                  Your cart is empty.
+                  {dictionary.cart.empty}
                 </Text>
               ) : (
                 groups.map((group) => (
                   <section key={group.menuSlug} className="py-8">
                     <h2 className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-                      {t(menuTypeLabels[group.menuSlug])}
+                      {t(menuTypeLabels[group.menuSlug], locale)}
                     </h2>
 
                     <ul className="mt-6 space-y-8">
@@ -121,7 +126,7 @@ export default function CartDrawer() {
                             <div className="relative h-24 w-24 shrink-0 overflow-hidden bg-zinc-50">
                               <Image
                                 src={line.photo}
-                                alt={t(line.title)}
+                                alt={t(line.title, locale)}
                                 fill
                                 sizes="96px"
                                 className="object-cover"
@@ -130,7 +135,7 @@ export default function CartDrawer() {
                           ) : null}
 
                           <div className="min-w-0 flex-1">
-                            <p className="text-zinc-900">{t(line.title)}</p>
+                            <p className="text-zinc-900">{t(line.title, locale)}</p>
 
                             <p className="mt-1 text-sm text-zinc-500">
                               {line.portion ? `${line.portion} · ` : ""}
@@ -143,7 +148,8 @@ export default function CartDrawer() {
                                 onChange={(quantity) =>
                                   setQuantity(line.placementId, quantity)
                                 }
-                                label={t(line.title)}
+                                label={t(line.title, locale)}
+                                locale={locale}
                               />
 
                               <button
@@ -151,7 +157,7 @@ export default function CartDrawer() {
                                 onClick={() => remove(line.placementId)}
                                 className="text-sm uppercase tracking-[0.15em] text-zinc-400 transition-colors hover:text-zinc-900"
                               >
-                                Remove
+                                {dictionary.cart.remove}
                               </button>
                             </div>
                           </div>
@@ -166,7 +172,7 @@ export default function CartDrawer() {
             <div className="border-t border-zinc-200 px-8 py-6">
               <div className="flex items-baseline justify-between">
                 <span className="text-sm uppercase tracking-[0.2em] text-zinc-500">
-                  Total
+                  {dictionary.cart.total}
                 </span>
                 <span className="text-xl text-zinc-900">
                   {formatPrice(total)}
@@ -179,7 +185,7 @@ export default function CartDrawer() {
                 disabled={lines.length === 0}
                 className="mt-6 w-full rounded-full bg-zinc-700 px-8 py-4 text-sm uppercase tracking-[0.2em] text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-zinc-300"
               >
-                Send order
+                {dictionary.cart.send}
               </button>
 
               {lines.length > 0 ? (
@@ -188,7 +194,7 @@ export default function CartDrawer() {
                   onClick={clear}
                   className="mt-4 w-full text-sm uppercase tracking-[0.15em] text-zinc-400 transition-colors hover:text-zinc-900"
                 >
-                  Clear cart
+                  {dictionary.cart.clear}
                 </button>
               ) : null}
             </div>

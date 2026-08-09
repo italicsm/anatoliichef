@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
+import type { NavItem } from "../../lib/navigation";
 import Button from "../ui/Button";
 import CartButton from "../ui/CartButton";
 import Container from "../ui/Container";
@@ -14,11 +17,14 @@ import Nav from "./Nav";
 const SCROLL_THRESHOLD = 16;
 
 type HeaderProps = {
+  locale: Locale;
+  navItems: NavItem[];
   social?: Partial<Record<SocialName, string>>;
 };
 
-export default function Header({ social }: HeaderProps) {
+export default function Header({ locale, navItems, social }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const dictionary = getDictionary(locale);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > SCROLL_THRESHOLD);
@@ -38,31 +44,35 @@ export default function Header({ social }: HeaderProps) {
       }`}
     >
       <Container>
-        <div className="flex h-20 items-center justify-between gap-6 md:gap-10">
-          <Link href="/" aria-label="Anatolii Lukianchuk — home">
-            <Logo size="sm" className="md:hidden" />
-            <Logo size="md" className="hidden md:inline-block" />
+        {/* The container caps at 1280px, so the desktop row has one width to
+            fit into no matter how wide the screen is. It only appears from xl,
+            where the longest language still leaves slack; below that the
+            burger holds everything. */}
+        <div className="flex h-20 items-center justify-between gap-6">
+          <Link href={`/${locale}`} aria-label={dictionary.header.home}>
+            <Logo size="sm" className="xl:hidden" />
+            <Logo size="md" className="hidden xl:inline-block" />
           </Link>
 
-          <Nav className="hidden md:block" />
+          <Nav items={navItems} className="hidden shrink-0 xl:block" />
 
-          <div className="hidden items-center gap-8 md:flex">
-            <CartButton />
-            <LanguageSwitcher activeLocale="UA" />
+          <div className="hidden items-center gap-6 xl:flex">
+            <CartButton locale={locale} />
+            <LanguageSwitcher locale={locale} compact />
             <Button
-              href="/#contact"
+              href={`/${locale}#contact`}
               size="sm"
               className="whitespace-nowrap text-sm uppercase tracking-[0.15em]"
             >
-              Reserve a Dinner
+              {dictionary.header.reserve}
             </Button>
           </div>
 
           {/* The cart stays reachable on small screens; everything else moves
               into the panel. */}
-          <div className="flex items-center gap-5 md:hidden">
-            <CartButton />
-            <MobileMenu social={social} />
+          <div className="flex items-center gap-5 xl:hidden">
+            <CartButton locale={locale} />
+            <MobileMenu locale={locale} navItems={navItems} social={social} />
           </div>
         </div>
       </Container>

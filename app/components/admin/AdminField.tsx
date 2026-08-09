@@ -8,6 +8,9 @@ type AdminFieldProps = {
   label: string;
   name: string;
   defaultValue?: string;
+  /** Supply with onChange to control the field — used where a button rewrites it. */
+  value?: string;
+  onChange?: (value: string) => void;
   placeholder?: string;
   required?: boolean;
   pattern?: string;
@@ -20,6 +23,8 @@ export default function AdminField({
   label,
   name,
   defaultValue,
+  value,
+  onChange,
   placeholder,
   required,
   pattern,
@@ -27,6 +32,13 @@ export default function AdminField({
   className = "",
 }: AdminFieldProps) {
   const id = `field-${name}`;
+
+  // Mixing the two modes on one input is what produces React's "controlled to
+  // uncontrolled" warning, so each field commits to one.
+  const binding =
+    value !== undefined
+      ? { value, onChange: (event: { target: { value: string } }) => onChange?.(event.target.value) }
+      : { defaultValue };
 
   return (
     <div className={className}>
@@ -39,20 +51,20 @@ export default function AdminField({
           id={id}
           name={name}
           rows={3}
-          defaultValue={defaultValue}
           placeholder={placeholder}
           required={required}
           className={`${adminFieldStyles} mt-2 resize-none`}
+          {...binding}
         />
       ) : (
         <input
           id={id}
           name={name}
-          defaultValue={defaultValue}
           placeholder={placeholder}
           required={required}
           pattern={pattern}
           className={`${adminFieldStyles} mt-2`}
+          {...binding}
         />
       )}
     </div>

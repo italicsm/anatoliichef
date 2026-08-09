@@ -2,10 +2,13 @@
 
 import { useRef, useState } from "react";
 import { useCart } from "../../lib/cart-store";
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
 import type { ValidationError } from "../../lib/order";
 import Spinner from "./Spinner";
 
 type CheckoutFormProps = {
+  locale: Locale;
   onBack: () => void;
   onSuccess: (orderNumber: string) => void;
 };
@@ -16,10 +19,12 @@ const fieldStyles =
 const labelStyles = "text-xs uppercase tracking-[0.25em] text-zinc-500";
 
 export default function CheckoutForm({
+  locale,
   onBack,
   onSuccess,
 }: CheckoutFormProps) {
   const { lines, clear } = useCart();
+  const dictionary = getDictionary(locale);
   const [isPending, setIsPending] = useState(false);
   const [errors, setErrors] = useState<ValidationError[]>([]);
 
@@ -79,7 +84,7 @@ export default function CheckoutForm({
 
         setErrors(
           received ?? [
-            { field: "form", message: "Something went wrong. Please retry." },
+            { field: "form", message: dictionary.checkout.unknownError },
           ]
         );
 
@@ -99,7 +104,7 @@ export default function CheckoutForm({
       onSuccess(orderNumber);
     } catch {
       setErrors([
-        { field: "form", message: "Network error. Please try again." },
+        { field: "form", message: dictionary.checkout.networkError },
       ]);
       isSubmitting.current = false;
     } finally {
@@ -112,7 +117,7 @@ export default function CheckoutForm({
       <div className="flex-1 space-y-7 overflow-y-auto px-8 py-8">
         <div>
           <label htmlFor="order-name" className={labelStyles}>
-            Name
+            {dictionary.checkout.name}
           </label>
           <input
             id="order-name"
@@ -125,7 +130,7 @@ export default function CheckoutForm({
 
         <div>
           <label htmlFor="order-phone" className={labelStyles}>
-            Phone
+            {dictionary.checkout.phone}
           </label>
           <input
             id="order-phone"
@@ -140,7 +145,7 @@ export default function CheckoutForm({
         <div className="grid grid-cols-2 gap-6">
           <div>
             <label htmlFor="order-date" className={labelStyles}>
-              Date
+              {dictionary.checkout.date}
             </label>
             <input
               id="order-date"
@@ -152,7 +157,7 @@ export default function CheckoutForm({
 
           <div>
             <label htmlFor="order-guests" className={labelStyles}>
-              Guests
+              {dictionary.checkout.guests}
             </label>
             <input
               id="order-guests"
@@ -165,7 +170,7 @@ export default function CheckoutForm({
 
         <div>
           <label htmlFor="order-comment" className={labelStyles}>
-            Comment
+            {dictionary.checkout.comment}
           </label>
           <textarea
             id="order-comment"
@@ -194,7 +199,7 @@ export default function CheckoutForm({
           className="flex w-full items-center justify-center gap-3 rounded-full bg-zinc-700 px-8 py-4 text-sm uppercase tracking-[0.2em] text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-zinc-300"
         >
           {isPending ? <Spinner /> : null}
-          {isPending ? "Sending" : "Send order"}
+          {isPending ? dictionary.checkout.sending : dictionary.checkout.submit}
         </button>
 
         <button
@@ -202,7 +207,7 @@ export default function CheckoutForm({
           onClick={onBack}
           className="mt-4 w-full text-sm uppercase tracking-[0.15em] text-zinc-400 transition-colors hover:text-zinc-900"
         >
-          Back to cart
+          {dictionary.checkout.back}
         </button>
       </div>
     </form>

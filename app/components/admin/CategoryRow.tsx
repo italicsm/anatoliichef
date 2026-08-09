@@ -84,6 +84,7 @@ export default function CategoryRow({
             defaults={{
               titleUk: category.title.uk ?? "",
               titleEn: category.title.en ?? "",
+              titleEs: category.title.es ?? "",
             }}
             photoUrl={category.photo}
             withPhoto

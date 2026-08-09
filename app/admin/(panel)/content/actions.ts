@@ -6,19 +6,13 @@ import {
   readContentBlock,
   writeContentBlock,
 } from "../../../lib/admin/site-content";
+import { readTranslated } from "../../../lib/admin/form-fields";
 import { deleteImage, uploadImage } from "../../../lib/admin/storage";
 
 export type ActionState = {
   error?: string;
   savedAt?: number;
 };
-
-function readTranslated(formData: FormData, field: string) {
-  const uk = String(formData.get(`${field}Uk`) ?? "").trim();
-  const en = String(formData.get(`${field}En`) ?? "").trim();
-
-  return { uk, en: en || uk };
-}
 
 function fail(error: unknown): ActionState {
   return {

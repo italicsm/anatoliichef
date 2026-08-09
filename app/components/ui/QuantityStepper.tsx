@@ -1,9 +1,13 @@
 "use client";
 
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
+
 type QuantityStepperProps = {
   quantity: number;
   onChange: (quantity: number) => void;
   label: string;
+  locale: Locale;
   className?: string;
 };
 
@@ -14,14 +18,16 @@ export default function QuantityStepper({
   quantity,
   onChange,
   label,
+  locale,
   className = "",
 }: QuantityStepperProps) {
+  const dictionary = getDictionary(locale);
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <button
         type="button"
         onClick={() => onChange(quantity - 1)}
-        aria-label={`Remove one ${label}`}
+        aria-label={`${dictionary.dish.removeOne}: ${label}`}
         className={buttonStyles}
       >
         −
@@ -37,7 +43,7 @@ export default function QuantityStepper({
       <button
         type="button"
         onClick={() => onChange(quantity + 1)}
-        aria-label={`Add one ${label}`}
+        aria-label={`${dictionary.dish.addOne}: ${label}`}
         className={buttonStyles}
       >
         +

@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
 
 const HIDE_AFTER_PX = 40;
 
 type ScrollIndicatorProps = {
+  locale: Locale;
   className?: string;
 };
 
@@ -13,9 +16,11 @@ type ScrollIndicatorProps = {
  * then gets out of the way, returning when the guest comes back up.
  */
 export default function ScrollIndicator({
+  locale,
   className = "",
 }: ScrollIndicatorProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const dictionary = getDictionary(locale);
 
   useEffect(() => {
     const handleScroll = () => setIsVisible(window.scrollY < HIDE_AFTER_PX);
@@ -47,7 +52,9 @@ export default function ScrollIndicator({
         <path d="M7 0 V40 M1 34 L7 40 L13 34" />
       </svg>
 
-      <span className="text-xs uppercase tracking-[0.3em]">Scroll</span>
+      <span className="text-xs uppercase tracking-[0.3em]">
+        {dictionary.hero.scroll}
+      </span>
     </div>
   );
 }

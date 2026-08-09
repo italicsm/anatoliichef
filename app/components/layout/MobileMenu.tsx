@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { navItems } from "../../lib/navigation";
+import { getDictionary } from "../../lib/dictionary";
+import type { Locale } from "../../lib/locale";
+import type { NavItem } from "../../lib/navigation";
 import Button from "../ui/Button";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
@@ -12,6 +14,8 @@ import type { SocialName } from "../ui/SocialIcon";
 import SocialLinks from "../ui/SocialLinks";
 
 type MobileMenuProps = {
+  locale: Locale;
+  navItems: NavItem[];
   className?: string;
   social?: Partial<Record<SocialName, string>>;
 };
@@ -25,11 +29,14 @@ type MobileMenuProps = {
  * open over the section the guest just asked for.
  */
 export default function MobileMenu({
+  locale,
+  navItems,
   className = "",
   social,
 }: MobileMenuProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const dictionary = getDictionary(locale);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -52,7 +59,7 @@ export default function MobileMenu({
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        aria-label="Open menu"
+        aria-label={dictionary.header.openMenu}
         aria-expanded={isOpen}
         className={`p-2 text-zinc-800 transition-colors hover:text-zinc-500 ${className}`}
       >
@@ -72,7 +79,7 @@ export default function MobileMenu({
       <dialog
         ref={dialogRef}
         onClose={() => setIsOpen(false)}
-        aria-label="Menu"
+        aria-label={dictionary.header.openMenu}
         className="menu-dialog fixed inset-0 m-0 h-full max-h-none w-full max-w-none bg-white p-0"
       >
         <div className="flex h-full flex-col">
@@ -84,7 +91,7 @@ export default function MobileMenu({
               onClick={() => setIsOpen(false)}
               className="text-sm uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-zinc-900"
             >
-              Close
+              {dictionary.header.close}
             </button>
           </Container>
 
@@ -107,11 +114,11 @@ export default function MobileMenu({
 
             <div className="mt-12">
               <Button
-                href="/#contact"
+                href={`/${locale}#contact`}
                 onClick={() => setIsOpen(false)}
                 className="w-full text-sm uppercase tracking-[0.2em]"
               >
-                Reserve a Dinner
+                {dictionary.header.reserve}
               </Button>
             </div>
           </Container>
@@ -119,8 +126,10 @@ export default function MobileMenu({
           <Container className="shrink-0 border-t border-zinc-200 py-8">
             <div className="flex items-center justify-between gap-6">
               <div>
-                <Eyebrow className="text-xs">Language</Eyebrow>
-                <LanguageSwitcher activeLocale="UA" className="mt-3" />
+                <Eyebrow className="text-xs">
+                  {dictionary.header.language}
+                </Eyebrow>
+                <LanguageSwitcher locale={locale} className="mt-3" />
               </div>
 
               <SocialLinks size="sm" links={social} />

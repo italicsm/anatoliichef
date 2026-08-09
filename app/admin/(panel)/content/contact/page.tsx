@@ -20,42 +20,20 @@ export default async function ContactContentPage() {
       </p>
 
       <div className="mt-10">
-        <ContentForm action={saveContactAction}>
-          <AdminField
-            label="Заголовок"
-            name="headingUk"
-            defaultValue={content.heading.uk}
-          />
-          <AdminField
-            label="Заголовок англійською"
-            name="headingEn"
-            defaultValue={content.heading.en}
-          />
-
-          <AdminField
-            label="Текст"
-            name="bodyUk"
-            multiline
-            defaultValue={content.body.uk}
-          />
-          <AdminField
-            label="Текст англійською"
-            name="bodyEn"
-            multiline
-            defaultValue={content.body.en}
-          />
-
-          <AdminField
-            label="Примітка про доступність"
-            name="availabilityUk"
-            defaultValue={content.availability.uk}
-          />
-          <AdminField
-            label="Примітка англійською"
-            name="availabilityEn"
-            defaultValue={content.availability.en}
-          />
-
+        <ContentForm
+          action={saveContactAction}
+          context="the «Contact» section of a private chef's website: a heading, an invitation to get in touch, a note about availability and the city"
+          fields={[
+            { name: "heading", label: "Заголовок", value: content.heading },
+            { name: "body", label: "Текст", multiline: true, value: content.body },
+            {
+              name: "availability",
+              label: "Примітка про доступність",
+              value: content.availability,
+            },
+            { name: "location", label: "Місто", value: content.location },
+          ]}
+        >
           <AdminField
             label="Телефон"
             name="phone"
@@ -69,17 +47,6 @@ export default async function ContactContentPage() {
             required
             defaultValue={content.email}
             placeholder="hello@example.com"
-          />
-
-          <AdminField
-            label="Місто"
-            name="locationUk"
-            defaultValue={content.location.uk}
-          />
-          <AdminField
-            label="Місто англійською"
-            name="locationEn"
-            defaultValue={content.location.en}
           />
 
           <AdminField

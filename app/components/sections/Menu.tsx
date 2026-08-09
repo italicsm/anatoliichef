@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import { getMenuTypes } from "../../lib/menu";
 import BoldOnHover from "../ui/BoldOnHover";
 import Container from "../ui/Container";
@@ -9,33 +11,31 @@ import Heading from "../ui/Heading";
 import Section from "../ui/Section";
 import Text from "../ui/Text";
 
-export default async function Menu() {
+export default async function Menu({ locale }: { locale: Locale }) {
   const menuTypes = await getMenuTypes();
+  const dictionary = getDictionary(locale);
 
   return (
     <Section id="menu" spacing="lg">
       <Container>
         <div className="max-w-xl">
-          <Eyebrow>Menu</Eyebrow>
+          <Eyebrow>{dictionary.menuSection.eyebrow}</Eyebrow>
 
           <Heading level={2} size="xl" className="mt-6">
-            Two ways to set the table
+            {dictionary.menuSection.heading}
           </Heading>
 
-          <Text className="mt-8">
-            Every menu is composed for the occasion. Choose the format, and we
-            will shape the dishes around it.
-          </Text>
+          <Text className="mt-8">{dictionary.menuSection.body}</Text>
         </div>
 
         <ul className="mt-14 grid gap-12 md:grid-cols-2 md:gap-16">
           {menuTypes.map((menuType) => (
             <li key={menuType.id}>
-              <Link href={`/${menuType.slug}`} className="group block">
+              <Link href={`/${locale}/${menuType.slug}`} className="group block">
                 <div className="relative aspect-[4/5] w-full overflow-hidden">
                   <Image
                     src={menuType.photo}
-                    alt={t(menuType.title)}
+                    alt={t(menuType.title, locale)}
                     fill
                     sizes="(min-width: 768px) 45vw, 100vw"
                     quality={90}
@@ -44,15 +44,15 @@ export default async function Menu() {
                 </div>
 
                 <Heading level={3} size="lg" className="mt-8">
-                  {t(menuType.title)}
+                  {t(menuType.title, locale)}
                 </Heading>
 
                 <Text muted className="mt-4 max-w-md">
-                  {t(menuType.description)}
+                  {t(menuType.description, locale)}
                 </Text>
 
                 <span className="mt-8 inline-block border-b border-zinc-300 pb-3 text-sm uppercase tracking-[0.25em] text-zinc-800 transition-colors group-hover:border-zinc-900">
-                  <BoldOnHover>View menu</BoldOnHover>
+                  <BoldOnHover>{dictionary.menuSection.viewMenu}</BoldOnHover>
                 </span>
               </Link>
             </li>

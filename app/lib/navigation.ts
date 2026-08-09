@@ -1,18 +1,30 @@
+import { getDictionary } from "./dictionary";
+import { t } from "./i18n";
+import type { Locale } from "./locale";
+import { getMenuTypes } from "./menu";
+
 export type NavItem = {
   label: string;
   href: string;
 };
 
 /**
- * One source for the desktop row and the mobile panel — two copies of this
- * list would drift the first time a link is added.
+ * One source for the desktop row and the mobile panel.
  *
- * Absolute hashes (`/#about`) so the links also work from the menu routes.
- * Gallery is intentionally absent until the section exists.
+ * Menu entries come from the database rather than a constant: renaming Фуршет
+ * in the panel has to rename it in the navigation too, and a menu added later
+ * has to appear without a deploy.
  */
-export const navItems: NavItem[] = [
-  { label: "Фуршет", href: "/furshet" },
-  { label: "Банкет", href: "/banquet" },
-  { label: "About", href: "/#about" },
-  { label: "Contact", href: "/#contact" },
-];
+export async function getNavItems(locale: Locale): Promise<NavItem[]> {
+  const dictionary = getDictionary(locale);
+  const menuTypes = await getMenuTypes();
+
+  return [
+    ...menuTypes.map((menuType) => ({
+      label: t(menuType.title, locale),
+      href: `/${locale}/${menuType.slug}`,
+    })),
+    { label: dictionary.nav.about, href: `/${locale}#about` },
+    { label: dictionary.nav.contact, href: `/${locale}#contact` },
+  ];
+}

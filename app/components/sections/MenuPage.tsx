@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import { getMenuBySlug } from "../../lib/menu";
 import type { MenuTypeSlug } from "../../lib/types";
 import Button from "../ui/Button";
@@ -14,14 +16,16 @@ import Text from "../ui/Text";
 
 type MenuPageProps = {
   menuSlug: MenuTypeSlug;
+  locale: Locale;
 };
 
 /**
  * The whole menu page for any menu type. /furshet and /banquet differ only by
  * the slug they pass in — everything else comes from the data layer.
  */
-export default async function MenuPage({ menuSlug }: MenuPageProps) {
+export default async function MenuPage({ menuSlug, locale }: MenuPageProps) {
   const menu = await getMenuBySlug(menuSlug);
+  const dictionary = getDictionary(locale);
 
   if (!menu) {
     notFound();
@@ -31,7 +35,7 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
 
   const navItems = categories.map(({ category, dishes }) => ({
     id: category.id,
-    title: t(category.title),
+    title: t(category.title, locale),
     count: dishes.length,
   }));
 
@@ -41,26 +45,26 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
         <Container>
           <div className="grid gap-8 md:grid-cols-12 md:items-end">
             <div className="md:col-span-7">
-              <Eyebrow className="text-sm">Menu</Eyebrow>
+              <Eyebrow className="text-sm">{dictionary.menuPage.eyebrow}</Eyebrow>
 
               <Heading level={1} size="xl" className="mt-4">
-                {t(menuType.title)}
+                {t(menuType.title, locale)}
               </Heading>
             </div>
 
             <div className="md:col-span-5">
-              <Text size="sm">{t(menuType.description)}</Text>
+              <Text size="sm">{t(menuType.description, locale)}</Text>
             </div>
           </div>
         </Container>
       </header>
 
       {categories.length > 0 ? (
-        <MenuCategoryNav items={navItems} />
+        <MenuCategoryNav items={navItems} label={dictionary.menuPage.categories} />
       ) : (
         <Section spacing="sm">
           <Container>
-            <Text muted>This menu is being updated.</Text>
+            <Text muted>{dictionary.menuPage.updating}</Text>
           </Container>
         </Section>
       )}
@@ -79,14 +83,18 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
               </span>
 
               <Heading level={2} size="lg">
-                {t(category.title)}
+                {t(category.title, locale)}
               </Heading>
             </div>
 
             <ul className="mt-10 grid gap-x-14 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
               {dishes.map((placedDish) => (
                 <li key={placedDish.placement.id} className="flex">
-                  <DishCard placedDish={placedDish} menuSlug={menuSlug} />
+                  <DishCard
+                    placedDish={placedDish}
+                    menuSlug={menuSlug}
+                    locale={locale}
+                  />
                 </li>
               ))}
             </ul>
@@ -100,20 +108,19 @@ export default async function MenuPage({ menuSlug }: MenuPageProps) {
 
           <div className="mt-14 text-center">
             <Heading level={2} size="xl">
-              Ready to plan your event?
+              {dictionary.menuPage.readyHeading}
             </Heading>
 
             <Text muted className="mx-auto mt-6 max-w-lg">
-              Tell me the date, the format and the number of guests — I will
-              compose a menu around them.
+              {dictionary.menuPage.readyBody}
             </Text>
 
             <div className="mt-12">
               <Button
-                href="/#contact"
+                href={`/${locale}#contact`}
                 className="text-sm uppercase tracking-[0.2em]"
               >
-                Reserve a Dinner
+                {dictionary.menuPage.reserve}
               </Button>
             </div>
           </div>

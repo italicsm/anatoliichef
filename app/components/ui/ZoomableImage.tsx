@@ -11,6 +11,8 @@ type ZoomableImageProps = {
   className?: string;
   /** Classes for the aspect-ratio box around the thumbnail. */
   frameClassName?: string;
+  /** Accessible name for the trigger; defaults to English if omitted. */
+  enlargeLabel?: string;
 };
 
 /**
@@ -23,6 +25,7 @@ export default function ZoomableImage({
   sizes,
   className = "",
   frameClassName = "",
+  enlargeLabel = "Enlarge photo",
 }: ZoomableImageProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
 
@@ -31,7 +34,7 @@ export default function ZoomableImage({
       <button
         type="button"
         onClick={() => dialogRef.current?.showModal()}
-        aria-label={`Enlarge photo: ${alt}`}
+        aria-label={`${enlargeLabel}: ${alt}`}
         className={`relative block w-full cursor-zoom-in overflow-hidden ${frameClassName}`}
       >
         <Image

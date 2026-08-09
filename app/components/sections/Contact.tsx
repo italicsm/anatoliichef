@@ -1,4 +1,6 @@
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import { getContactContent } from "../../lib/site-content";
 import Button from "../ui/Button";
 import Container from "../ui/Container";
@@ -14,23 +16,24 @@ type ContactDetail = {
   href?: string;
 };
 
-export default async function Contact() {
+export default async function Contact({ locale }: { locale: Locale }) {
   const content = await getContactContent();
+  const dictionary = getDictionary(locale);
 
   // Location stays plain text: the brief ruled out an embedded map, and a link
   // with nowhere sensible to go is worse than no link.
   const contactDetails: ContactDetail[] = [
     {
-      label: "Phone",
+      label: dictionary.contact.phone,
       value: content.phone,
       href: `tel:${content.phone.replace(/\s/g, "")}`,
     },
     {
-      label: "Email",
+      label: dictionary.contact.email,
       value: content.email,
       href: `mailto:${content.email}`,
     },
-    { label: "Location", value: t(content.location) },
+    { label: dictionary.contact.location, value: t(content.location, locale) },
   ];
 
   return (
@@ -38,20 +41,20 @@ export default async function Contact() {
       <Container>
         <div className="grid gap-16 md:grid-cols-2 md:gap-24">
           <div className="max-w-xl">
-            <Eyebrow>Contact</Eyebrow>
+            <Eyebrow>{dictionary.contact.eyebrow}</Eyebrow>
 
             <Heading level={2} size="xl" className="mt-6">
-              {t(content.heading)}
+              {t(content.heading, locale)}
             </Heading>
 
             <div className="mt-10 space-y-6">
-              <Text>{t(content.body)}</Text>
-              <Text muted>{t(content.availability)}</Text>
+              <Text>{t(content.body, locale)}</Text>
+              <Text muted>{t(content.availability, locale)}</Text>
             </div>
 
             <div className="mt-12">
               <Button className="text-sm uppercase tracking-[0.2em]">
-                Reserve a Dinner
+                {dictionary.contact.reserve}
               </Button>
             </div>
           </div>
@@ -83,7 +86,7 @@ export default async function Contact() {
             </dl>
 
             <div className="mt-12">
-              <Eyebrow className="text-sm">Elsewhere</Eyebrow>
+              <Eyebrow className="text-sm">{dictionary.contact.elsewhere}</Eyebrow>
 
               <SiteSocialLinks className="mt-6" />
             </div>

@@ -2,19 +2,24 @@
 
 import type { CartLineDraft } from "../../lib/cart";
 import { useCart } from "../../lib/cart-store";
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import QuantityStepper from "./QuantityStepper";
 
 type AddToCartButtonProps = {
   draft: CartLineDraft;
+  locale: Locale;
   className?: string;
 };
 
 export default function AddToCartButton({
   draft,
+  locale,
   className = "",
 }: AddToCartButtonProps) {
   const { lines, add, setQuantity } = useCart();
+  const dictionary = getDictionary(locale);
   const line = lines.find(
     (candidate) => candidate.placementId === draft.placementId
   );
@@ -24,7 +29,8 @@ export default function AddToCartButton({
       <QuantityStepper
         quantity={line.quantity}
         onChange={(quantity) => setQuantity(draft.placementId, quantity)}
-        label={t(draft.title)}
+        label={t(draft.title, locale)}
+        locale={locale}
         className={className}
       />
     );
@@ -36,7 +42,7 @@ export default function AddToCartButton({
       onClick={() => add(draft)}
       className={`border-b border-zinc-300 pb-1 text-xs uppercase tracking-[0.25em] text-zinc-500 transition-colors hover:border-zinc-900 hover:text-zinc-900 ${className}`}
     >
-      Add to order
+      {dictionary.dish.addToOrder}
     </button>
   );
 }

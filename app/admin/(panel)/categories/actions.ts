@@ -9,6 +9,7 @@ import {
   moveCategory,
   updateCategory,
 } from "../../../lib/admin/categories";
+import { readTranslated } from "../../../lib/admin/form-fields";
 import { deleteImage, uploadImage } from "../../../lib/admin/storage";
 
 export type ActionState = {
@@ -25,13 +26,6 @@ function revalidateMenus(): void {
   revalidatePath("/", "layout");
 }
 
-function readTitle(formData: FormData) {
-  const uk = String(formData.get("titleUk") ?? "").trim();
-  const en = String(formData.get("titleEn") ?? "").trim();
-
-  return { uk, en: en || uk };
-}
-
 function fail(error: unknown): ActionState {
   return {
     error:
@@ -45,7 +39,7 @@ export async function createCategoryAction(
   _previous: ActionState,
   formData: FormData
 ): Promise<ActionState> {
-  const title = readTitle(formData);
+  const title = readTranslated(formData, "title");
   const menuTypeId = String(formData.get("menuTypeId") ?? "");
 
   if (!title.uk) {
@@ -67,7 +61,7 @@ export async function updateCategoryAction(
   formData: FormData
 ): Promise<ActionState> {
   const id = String(formData.get("id") ?? "");
-  const title = readTitle(formData);
+  const title = readTranslated(formData, "title");
 
   if (!title.uk) {
     return { error: "Вкажіть назву категорії." };

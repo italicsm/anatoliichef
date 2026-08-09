@@ -19,6 +19,7 @@ const items: AdminNavItem[] = [
   { label: "Про шефа", href: "/admin/content/about" },
   { label: "Контакти", href: "/admin/content/contact" },
   { label: "Замовлення", href: "/admin/orders" },
+  { label: "Налаштування", href: "/admin/settings" },
 ];
 
 export default function AdminNav() {

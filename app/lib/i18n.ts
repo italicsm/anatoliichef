@@ -1,4 +1,7 @@
-export type ContentLocale = "uk" | "en" | "es";
+import type { Locale } from "./locale";
+
+/** Content and interface share one set of languages; see lib/locale.ts. */
+export type ContentLocale = Locale;
 
 /**
  * Mirrors the JSONB columns planned for Supabase: one row per entity,
@@ -7,10 +10,10 @@ export type ContentLocale = "uk" | "en" | "es";
 export type Translated = Partial<Record<ContentLocale, string>>;
 
 /**
- * The site still renders English copy. Flip this to "uk" once the
- * Ukrainian texts arrive; nothing else needs to change.
+ * Only a fallback for code paths that have no request context — pages read
+ * the locale from the address instead.
  */
-export const DEFAULT_LOCALE: ContentLocale = "en";
+export const DEFAULT_LOCALE: ContentLocale = "uk";
 
 /**
  * The panel is used by the chef, so it always shows Ukrainian regardless of
@@ -18,7 +21,7 @@ export const DEFAULT_LOCALE: ContentLocale = "en";
  */
 export const ADMIN_LOCALE: ContentLocale = "uk";
 
-const FALLBACK_ORDER: ContentLocale[] = ["uk", "en", "es"];
+const FALLBACK_ORDER: ContentLocale[] = ["uk", "es", "en"];
 
 /**
  * Reads a translated value, falling back to the first language that has one

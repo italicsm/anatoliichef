@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import {
   getAboutContent,
   toLines,
@@ -12,34 +14,11 @@ import Heading from "../ui/Heading";
 import Section from "../ui/Section";
 import Text from "../ui/Text";
 
-type Fact = {
-  term: string;
-  description: string;
-};
-
-const facts: Fact[] = [
-  {
-    term: "Private Events",
-    description: "Dinners, celebrations and quiet evenings at home.",
-  },
-  {
-    term: "Personal Menus",
-    description: "Composed for every client, every season.",
-  },
-  {
-    term: "Barcelona",
-    description: "And wherever the table is set.",
-  },
-  {
-    term: "Seasonal Products",
-    description: "Chosen at the market, never from a catalogue.",
-  },
-];
-
-export default async function About() {
+export default async function About({ locale }: { locale: Locale }) {
   const content = await getAboutContent();
-  const paragraphs = toParagraphs(t(content.body));
-  const specialities = toLines(t(content.specialities));
+  const dictionary = getDictionary(locale);
+  const paragraphs = toParagraphs(t(content.body, locale));
+  const specialities = toLines(t(content.specialities, locale));
 
   return (
     <Section id="about" spacing="lg">
@@ -48,7 +27,7 @@ export default async function About() {
           <div className="relative aspect-[2/3] w-full">
             <Image
               src={content.photo ?? "/photo/tolic/tolic3.jpg"}
-              alt="Anatolii Lukianchuk in his kitchen"
+              alt={dictionary.about.photoAlt}
               fill
               sizes="(min-width: 768px) 45vw, 100vw"
               quality={100}
@@ -57,10 +36,10 @@ export default async function About() {
           </div>
 
           <div className="max-w-xl">
-            <Eyebrow>About</Eyebrow>
+            <Eyebrow>{dictionary.about.eyebrow}</Eyebrow>
 
             <Heading level={2} size="xl" className="mt-6">
-              {t(content.heading)}
+              {t(content.heading, locale)}
             </Heading>
 
             <div className="mt-10 space-y-6">
@@ -74,7 +53,7 @@ export default async function About() {
         <Divider spacing="lg" />
 
         <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-24">
-          <Eyebrow className="text-sm">Specialities</Eyebrow>
+          <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
 
           <ul className="grid gap-x-16 gap-y-5 sm:grid-cols-2">
             {specialities.map((speciality) => (
@@ -89,7 +68,7 @@ export default async function About() {
         </div>
 
         <dl className="mt-16 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {facts.map((fact) => (
+          {dictionary.about.facts.map((fact) => (
             <div key={fact.term} className="border-t border-zinc-200 pt-6">
               <dt className="text-sm uppercase tracking-[0.2em] text-zinc-800">
                 {fact.term}
@@ -103,7 +82,7 @@ export default async function About() {
 
         <blockquote className="mx-auto mt-20 max-w-2xl text-center">
           <p className="font-serif text-3xl leading-snug text-zinc-700">
-            {t(content.quote)}
+            {t(content.quote, locale)}
           </p>
           <footer className="mt-8">
             <Eyebrow className="text-sm">Anatolii Lukianchuk</Eyebrow>

@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
+import type { Locale } from "../../lib/locale";
 import { getMenuTypes } from "../../lib/menu";
 import BoldOnHover from "../ui/BoldOnHover";
 import Container from "../ui/Container";
@@ -22,8 +24,9 @@ import SiteSocialLinks from "../ui/SiteSocialLinks";
  * Below xl the same element falls back into the flow underneath the text and
  * the section height becomes automatic.
  */
-export default async function Hero() {
+export default async function Hero({ locale }: { locale: Locale }) {
   const menuTypes = await getMenuTypes();
+  const dictionary = getDictionary(locale);
 
   return (
     <section className="relative overflow-hidden bg-white xl:-mt-20 xl:h-[min(100svh,66vw)] xl:min-h-[44rem] xl:pt-20">
@@ -35,10 +38,10 @@ export default async function Hero() {
             Lukianchuk
           </h1>
 
-          <Eyebrow className="mt-7 pl-1">Private Chef</Eyebrow>
+          <Eyebrow className="mt-7 pl-1">{dictionary.hero.role}</Eyebrow>
 
           <p className="mt-10 max-w-[18rem] pl-1 font-serif text-2xl leading-snug text-zinc-700">
-            Creating unforgettable dining experiences in Barcelona.
+            {dictionary.hero.tagline}
           </p>
 
           <nav
@@ -48,10 +51,10 @@ export default async function Hero() {
             {menuTypes.map((menuType) => (
               <Link
                 key={menuType.id}
-                href={`/${menuType.slug}`}
+                href={`/${locale}/${menuType.slug}`}
                 className="group inline-block border-b border-zinc-300 pb-3 text-sm uppercase tracking-[0.25em] text-zinc-800 transition-colors hover:border-zinc-900"
               >
-                <BoldOnHover>{t(menuType.title)}</BoldOnHover>
+                <BoldOnHover>{t(menuType.title, locale)}</BoldOnHover>
               </Link>
             ))}
           </nav>
@@ -75,7 +78,7 @@ export default async function Hero() {
         <div className="relative z-0 mt-12 aspect-square w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:w-auto">
           <Image
             src="/photo/tolic/tolic4.jpg"
-            alt="Anatolii Lukianchuk with freshly baked bread"
+            alt={dictionary.hero.photoAlt}
             fill
             priority
             sizes="(min-width: 1280px) 66vw, 100vw"
@@ -85,7 +88,7 @@ export default async function Hero() {
         </div>
 
         <div className="hidden xl:absolute xl:bottom-14 xl:left-6 xl:block">
-          <ScrollIndicator />
+          <ScrollIndicator locale={locale} />
         </div>
       </Container>
     </section>
