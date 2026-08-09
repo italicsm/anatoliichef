@@ -1,18 +1,16 @@
 import Image from "next/image";
+import { t } from "../../lib/i18n";
+import {
+  getAboutContent,
+  toLines,
+  toParagraphs,
+} from "../../lib/site-content";
 import Container from "../ui/Container";
 import Divider from "../ui/Divider";
 import Eyebrow from "../ui/Eyebrow";
 import Heading from "../ui/Heading";
 import Section from "../ui/Section";
 import Text from "../ui/Text";
-
-const specialities: string[] = [
-  "Private Dining",
-  "Buffet Catering",
-  "Corporate Events",
-  "Family Celebrations",
-  "Chef at Home",
-];
 
 type Fact = {
   term: string;
@@ -38,14 +36,18 @@ const facts: Fact[] = [
   },
 ];
 
-export default function About() {
+export default async function About() {
+  const content = await getAboutContent();
+  const paragraphs = toParagraphs(t(content.body));
+  const specialities = toLines(t(content.specialities));
+
   return (
     <Section id="about" spacing="lg">
       <Container>
         <div className="grid items-center gap-16 md:grid-cols-2 md:gap-24">
           <div className="relative aspect-[2/3] w-full">
             <Image
-              src="/photo/tolic/tolic3.jpg"
+              src={content.photo ?? "/photo/tolic/tolic3.jpg"}
               alt="Anatolii Lukianchuk in his kitchen"
               fill
               sizes="(min-width: 768px) 45vw, 100vw"
@@ -58,27 +60,13 @@ export default function About() {
             <Eyebrow>About</Eyebrow>
 
             <Heading level={2} size="xl" className="mt-6">
-              Meet Anatolii
+              {t(content.heading)}
             </Heading>
 
             <div className="mt-10 space-y-6">
-              <Text>
-                I am Anatolii Lukianchuk, a private chef based in Barcelona.
-              </Text>
-              <Text>
-                For many years I have been creating dining experiences where
-                every detail matters — from carefully selected ingredients to
-                elegant presentation and warm hospitality.
-              </Text>
-              <Text>
-                I work with private dinners, buffet catering, family
-                celebrations and corporate events, composing a unique menu for
-                every client.
-              </Text>
-              <Text>
-                My philosophy is simple: outstanding food, honest products and
-                unforgettable moments around one table.
-              </Text>
+              {paragraphs.map((paragraph) => (
+                <Text key={paragraph.slice(0, 32)}>{paragraph}</Text>
+              ))}
             </div>
           </div>
         </div>
@@ -115,7 +103,7 @@ export default function About() {
 
         <blockquote className="mx-auto mt-20 max-w-2xl text-center">
           <p className="font-serif text-3xl leading-snug text-zinc-700">
-            The best memories begin around one table.
+            {t(content.quote)}
           </p>
           <footer className="mt-8">
             <Eyebrow className="text-sm">Anatolii Lukianchuk</Eyebrow>

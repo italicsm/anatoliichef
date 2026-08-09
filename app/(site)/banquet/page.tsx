@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import MenuPage from "../components/sections/MenuPage";
-import { t } from "../lib/i18n";
-import { getMenuBySlug } from "../lib/menu";
-import type { MenuTypeSlug } from "../lib/types";
+import MenuPage from "../../components/sections/MenuPage";
+import { t } from "../../lib/i18n";
+import { getMenuBySlug } from "../../lib/menu";
+import type { MenuTypeSlug } from "../../lib/types";
 
 const menuSlug: MenuTypeSlug = "banquet";
 

@@ -6,7 +6,7 @@ import BoldOnHover from "../ui/BoldOnHover";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import ScrollIndicator from "../ui/ScrollIndicator";
-import SocialLinks from "../ui/SocialLinks";
+import SiteSocialLinks from "../ui/SiteSocialLinks";
 
 /**
  * Two layouts, one markup tree.
@@ -56,7 +56,7 @@ export default async function Hero() {
             ))}
           </nav>
 
-          <SocialLinks size="sm" className="mt-10 pl-1" />
+          <SiteSocialLinks size="sm" className="mt-10 pl-1" />
         </div>
 
         {/*
@@ -74,13 +74,13 @@ export default async function Hero() {
         */}
         <div className="relative z-0 mt-12 aspect-square w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:w-auto">
           <Image
-            src="/photo/tolic/tolic234.jpg"
+            src="/photo/tolic/tolic4.jpg"
             alt="Anatolii Lukianchuk with freshly baked bread"
             fill
             priority
             sizes="(min-width: 1280px) 66vw, 100vw"
             quality={100}
-            className="object-contain object-top saturate-[0.7] transition-[filter] duration-700 ease-out hover:saturate-100 motion-reduce:transition-none"
+            className="object-contain object-top"
           />
         </div>
 

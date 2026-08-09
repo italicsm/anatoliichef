@@ -7,12 +7,17 @@ import CartButton from "../ui/CartButton";
 import Container from "../ui/Container";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import Logo from "../ui/Logo";
+import type { SocialName } from "../ui/SocialIcon";
 import MobileMenu from "./MobileMenu";
 import Nav from "./Nav";
 
 const SCROLL_THRESHOLD = 16;
 
-export default function Header() {
+type HeaderProps = {
+  social?: Partial<Record<SocialName, string>>;
+};
+
+export default function Header({ social }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -57,7 +62,7 @@ export default function Header() {
               into the panel. */}
           <div className="flex items-center gap-5 md:hidden">
             <CartButton />
-            <MobileMenu />
+            <MobileMenu social={social} />
           </div>
         </div>
       </Container>

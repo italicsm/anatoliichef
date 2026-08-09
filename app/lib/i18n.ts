@@ -12,6 +12,12 @@ export type Translated = Partial<Record<ContentLocale, string>>;
  */
 export const DEFAULT_LOCALE: ContentLocale = "en";
 
+/**
+ * The panel is used by the chef, so it always shows Ukrainian regardless of
+ * what the public site is currently rendering.
+ */
+export const ADMIN_LOCALE: ContentLocale = "uk";
+
 const FALLBACK_ORDER: ContentLocale[] = ["uk", "en", "es"];
 
 /**

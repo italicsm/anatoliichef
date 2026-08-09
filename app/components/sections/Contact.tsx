@@ -1,32 +1,38 @@
+import { t } from "../../lib/i18n";
+import { getContactContent } from "../../lib/site-content";
 import Button from "../ui/Button";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import Heading from "../ui/Heading";
 import Section from "../ui/Section";
-import SocialLinks from "../ui/SocialLinks";
+import SiteSocialLinks from "../ui/SiteSocialLinks";
 import Text from "../ui/Text";
 
-/**
- * TODO: replace the placeholders below with the real contact details.
- * Everything the section renders comes from these two arrays.
- */
 type ContactDetail = {
   label: string;
   value: string;
   href?: string;
 };
 
-const contactDetails: ContactDetail[] = [
-  { label: "Phone", value: "+34 600 000 000", href: "tel:+34600000000" },
-  {
-    label: "Email",
-    value: "hello@anatoliilukianchuk.com",
-    href: "mailto:hello@anatoliilukianchuk.com",
-  },
-  { label: "Location", value: "Barcelona, Spain" },
-];
+export default async function Contact() {
+  const content = await getContactContent();
 
-export default function Contact() {
+  // Location stays plain text: the brief ruled out an embedded map, and a link
+  // with nowhere sensible to go is worse than no link.
+  const contactDetails: ContactDetail[] = [
+    {
+      label: "Phone",
+      value: content.phone,
+      href: `tel:${content.phone.replace(/\s/g, "")}`,
+    },
+    {
+      label: "Email",
+      value: content.email,
+      href: `mailto:${content.email}`,
+    },
+    { label: "Location", value: t(content.location) },
+  ];
+
   return (
     <Section id="contact" spacing="lg">
       <Container>
@@ -35,16 +41,12 @@ export default function Contact() {
             <Eyebrow>Contact</Eyebrow>
 
             <Heading level={2} size="xl" className="mt-6">
-              Let’s create something memorable together.
+              {t(content.heading)}
             </Heading>
 
             <div className="mt-10 space-y-6">
-              <Text>
-                Whether you’re planning an intimate dinner, a buffet or a
-                corporate event, I would be delighted to create a unique
-                culinary experience for you.
-              </Text>
-              <Text muted>Available in Barcelona and surrounding areas.</Text>
+              <Text>{t(content.body)}</Text>
+              <Text muted>{t(content.availability)}</Text>
             </div>
 
             <div className="mt-12">
@@ -83,7 +85,7 @@ export default function Contact() {
             <div className="mt-12">
               <Eyebrow className="text-sm">Elsewhere</Eyebrow>
 
-              <SocialLinks className="mt-6" />
+              <SiteSocialLinks className="mt-6" />
             </div>
           </div>
         </div>

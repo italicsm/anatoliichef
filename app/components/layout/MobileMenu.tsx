@@ -8,10 +8,12 @@ import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import Logo from "../ui/Logo";
+import type { SocialName } from "../ui/SocialIcon";
 import SocialLinks from "../ui/SocialLinks";
 
 type MobileMenuProps = {
   className?: string;
+  social?: Partial<Record<SocialName, string>>;
 };
 
 /**
@@ -22,7 +24,10 @@ type MobileMenuProps = {
  * navigate without unmounting anything, so the dialog would otherwise stay
  * open over the section the guest just asked for.
  */
-export default function MobileMenu({ className = "" }: MobileMenuProps) {
+export default function MobileMenu({
+  className = "",
+  social,
+}: MobileMenuProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -118,7 +123,7 @@ export default function MobileMenu({ className = "" }: MobileMenuProps) {
                 <LanguageSwitcher activeLocale="UA" className="mt-3" />
               </div>
 
-              <SocialLinks size="sm" />
+              <SocialLinks size="sm" links={social} />
             </div>
           </Container>
         </div>

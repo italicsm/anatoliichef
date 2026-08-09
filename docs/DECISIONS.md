@@ -240,6 +240,34 @@ on and no policy, the publishable key sees an empty table rather than an error,
 which is exactly the intended protection. Writes go through the secret key,
 inside route handlers only.
 
+### Uploads are server-side, the bucket is read-only in public
+
+The `menu` bucket is public for reads so `next/image` can optimise plain URLs
+without signing every request. There are no insert, update or delete policies:
+uploads go through the service role key inside server actions, exactly like
+every other write. Verified — an upload with the publishable key is rejected.
+
+`next.config.ts` derives `images.remotePatterns` from `SUPABASE_URL`. Without
+that entry every uploaded photo renders as a broken box, and the failure looks
+like a bug in the admin rather than a missing config line.
+
+### Upload before writing the row, delete the file after
+
+A failed upload leaves the entity with its previous photo instead of a
+reference to a file that was never stored, and the old file is removed only
+once the new URL is safely in the database.
+
+### The first photo is the main one
+
+Dish photos have no "is main" flag: the card renders `photos[0]`, so ordering
+is the setting. A flag would be a second source of truth that can disagree
+with the order it is supposed to describe.
+
+### Order status lives behind a check constraint
+
+`new | confirmed | done | cancelled`, enforced by the database rather than by
+the form. Verified — an invalid value is rejected at the constraint (23514).
+
 ---
 
 ## Verification
