@@ -52,6 +52,7 @@ async function saveToDatabase(order: OrderRecord): Promise<boolean> {
     const { data, error } = await client
       .from("orders")
       .insert({
+        kind: order.kind,
         number: order.number,
         created_at: order.createdAt.toISOString(),
         name: order.contact.name,
@@ -68,6 +69,12 @@ async function saveToDatabase(order: OrderRecord): Promise<boolean> {
       console.error("[order] could not insert the order", error);
 
       return false;
+    }
+
+    // A booking has no lines, and inserting an empty array is a round trip
+    // that can only fail.
+    if (order.lines.length === 0) {
+      return true;
     }
 
     const { error: itemsError } = await client.from("order_items").insert(

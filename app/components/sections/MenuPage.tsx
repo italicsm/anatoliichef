@@ -87,9 +87,14 @@ export default async function MenuPage({ menuSlug, locale }: MenuPageProps) {
               </Heading>
             </div>
 
-            <ul className="mt-10 grid gap-x-14 gap-y-16 md:grid-cols-2 lg:grid-cols-3">
+            {/* Cards need air around them; list rows need a rule between them,
+                and far less of it. */}
+            <ul className="mt-10 grid gap-x-14 gap-y-8 md:grid-cols-2 md:gap-y-16 lg:grid-cols-3">
               {dishes.map((placedDish) => (
-                <li key={placedDish.placement.id} className="flex">
+                <li
+                  key={placedDish.placement.id}
+                  className="flex border-b border-zinc-100 pb-8 last:border-0 last:pb-0 md:border-0 md:pb-0"
+                >
                   <DishCard
                     placedDish={placedDish}
                     menuSlug={menuSlug}

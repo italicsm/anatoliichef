@@ -10,6 +10,7 @@ import { formatPrice } from "../../lib/format";
 import { t } from "../../lib/i18n";
 import { menuTypeLabels } from "../../lib/menu-labels";
 import CheckoutForm from "./CheckoutForm";
+import CloseButton from "./CloseButton";
 import Eyebrow from "./Eyebrow";
 import QuantityStepper from "./QuantityStepper";
 import Text from "./Text";
@@ -62,14 +63,7 @@ export default function CartDrawer({ locale }: { locale: Locale }) {
             {step === "form" ? dictionary.cart.details : dictionary.cart.title}
           </Eyebrow>
 
-          <button
-            type="button"
-            onClick={close}
-            aria-label={dictionary.cart.close}
-            className="text-sm uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-zinc-900"
-          >
-            {dictionary.cart.close}
-          </button>
+          <CloseButton onClick={close} label={dictionary.cart.close} />
         </div>
 
         {step === "done" ? (

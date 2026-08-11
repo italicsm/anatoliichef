@@ -84,6 +84,15 @@ export const en: Dictionary = {
     thanksBody:
       "Your order has been sent. I will call you back shortly to confirm the details.",
   },
+  booking: {
+    title: "Dinner request",
+    intro:
+      "Tell us when and for how many guests — the chef will get in touch and help you compose the menu.",
+    submit: "Send the request",
+    thanksTitle: "Thank you, your request is on its way.",
+    thanksBody: "The chef will be in touch shortly.",
+    close: "Close",
+  },
   checkout: {
     name: "Name",
     phone: "Phone",

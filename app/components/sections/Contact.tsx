@@ -2,7 +2,7 @@ import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
 import type { Locale } from "../../lib/locale";
 import { getContactContent } from "../../lib/site-content";
-import Button from "../ui/Button";
+import BookingDialog from "../ui/BookingDialog";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import Heading from "../ui/Heading";
@@ -53,9 +53,7 @@ export default async function Contact({ locale }: { locale: Locale }) {
             </div>
 
             <div className="mt-12">
-              <Button className="text-sm uppercase tracking-[0.2em]">
-                {dictionary.contact.reserve}
-              </Button>
+              <BookingDialog locale={locale} />
             </div>
           </div>
 

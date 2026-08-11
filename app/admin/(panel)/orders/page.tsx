@@ -43,6 +43,14 @@ export default async function OrdersPage() {
                   <span className="ml-4 text-xs uppercase tracking-[0.2em] text-zinc-400">
                     {dateTimeFormatter.format(new Date(order.createdAt))}
                   </span>
+                  {/* A request from the Contact section has no dishes and no
+                      total, so it has to announce itself — otherwise it reads
+                      as an order someone forgot to fill in. */}
+                  {order.kind === "booking" ? (
+                    <span className="ml-4 border border-zinc-300 px-2 py-1 text-xs uppercase tracking-[0.2em] text-zinc-500">
+                      Запит
+                    </span>
+                  ) : null}
                 </p>
 
                 <p className="mt-2 text-zinc-700">
@@ -67,7 +75,7 @@ export default async function OrdersPage() {
 
               <div className="flex flex-col items-end gap-3">
                 <span className="text-xl tabular-nums text-zinc-900">
-                  {formatPrice(order.total)}
+                  {order.kind === "booking" ? "—" : formatPrice(order.total)}
                 </span>
 
                 <OrderStatusControl id={order.id} status={order.status} />

@@ -297,6 +297,36 @@ the form. Verified — an invalid value is rejected at the constraint (23514).
 
 ---
 
+### A booking is an order without dishes
+
+The Contact section asks for a dinner from someone who has not opened the menu.
+That request carries the same fields an order carries and differs only in
+having no items and no total, so it lives in the same table behind a `kind`
+column with a check constraint, and reuses the numbering, the notification
+path and the chef's single inbox. A second table would have duplicated all
+four and split the inbox in two.
+
+### Where orders are delivered is configuration, not deployment
+
+Telegram token, chat id and the e-mail addresses moved out of `.env.local` and
+into `app_settings`, read through the same "environment first, database second"
+rule as the Gemini key. Changing where an order lands should not require a
+rebuild.
+
+**Consequence.** Two buttons exist because this configuration cannot be
+verified by reading it. "Знайти чати" asks Telegram which chats the bot can
+see — a bot cannot message a person by @username, it needs a numeric id, and it
+only learns that id after the person writes to it first. "Перевірити звʼязок"
+sends through the real senders.
+
+### An error message carries the body, not the status code
+
+Resend answers 403 for an unverified sender domain, a revoked key and a
+Cloudflare block alike; Telegram is no better. Both senders now pass the
+response text through to the panel. The status code alone cost an evening.
+
+---
+
 ## Verification
 
 Rules earned by getting them wrong. Intended as the working brief for a future

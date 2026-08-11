@@ -11,7 +11,12 @@ type QuantityStepperProps = {
   className?: string;
 };
 
-const buttonStyles =
+/**
+ * Exported so the add button can wear the same square. Pressing it turns it
+ * into this stepper, and the + keeps its size and position through that change
+ * instead of jumping.
+ */
+export const stepperButtonStyles =
   "flex h-7 w-7 items-center justify-center border border-zinc-200 text-zinc-500 transition-colors hover:border-zinc-900 hover:text-zinc-900";
 
 export default function QuantityStepper({
@@ -28,7 +33,7 @@ export default function QuantityStepper({
         type="button"
         onClick={() => onChange(quantity - 1)}
         aria-label={`${dictionary.dish.removeOne}: ${label}`}
-        className={buttonStyles}
+        className={stepperButtonStyles}
       >
         −
       </button>
@@ -44,7 +49,7 @@ export default function QuantityStepper({
         type="button"
         onClick={() => onChange(quantity + 1)}
         aria-label={`${dictionary.dish.addOne}: ${label}`}
-        className={buttonStyles}
+        className={stepperButtonStyles}
       >
         +
       </button>

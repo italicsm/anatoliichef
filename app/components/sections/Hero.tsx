@@ -75,7 +75,17 @@ export default async function Hero({ locale }: { locale: Locale }) {
           border and replace the dissolve with a hard vertical cut, which is
           why the overhang is deliberately capped short of it.
         */}
-        <div className="relative z-0 mt-12 aspect-square w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:w-auto">
+        {/*
+          The file is square, but the chef stands to the right of it: the left
+          22% is empty white left there for the desktop composition. Fitting
+          that whole square into a square frame is why the photo looked small
+          on a phone — a fifth of the width was nothing.
+
+          Below xl the frame is 3:4 and the image covers it from the right
+          edge, which crops away that empty band and nothing else. The subject
+          gains a third of its width without touching the file.
+        */}
+        <div className="relative z-0 mt-12 aspect-[3/4] w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:aspect-square xl:w-auto">
           <Image
             src="/photo/tolic/tolic4.jpg"
             alt={dictionary.hero.photoAlt}
@@ -83,7 +93,7 @@ export default async function Hero({ locale }: { locale: Locale }) {
             priority
             sizes="(min-width: 1280px) 66vw, 100vw"
             quality={100}
-            className="object-contain object-top"
+            className="object-cover object-right xl:object-contain xl:object-top"
           />
         </div>
 

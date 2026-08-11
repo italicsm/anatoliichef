@@ -18,7 +18,16 @@ export type OrderContactInput = {
   comment?: string;
 };
 
+/**
+ * A booking is the same request without dishes: someone who has not opened the
+ * menu yet still wants to ask for a dinner. Everything downstream — numbering,
+ * notification, storage, the chef's inbox — is shared, because splitting it
+ * would have given the chef two places to look.
+ */
+export type OrderKind = "order" | "booking";
+
 export type OrderInput = {
+  kind: OrderKind;
   contact: OrderContactInput;
   items: OrderItemInput[];
 };
@@ -41,6 +50,7 @@ export type ResolvedOrderLine = {
 };
 
 export type ResolvedOrder = {
+  kind: OrderKind;
   contact: OrderContactInput;
   lines: ResolvedOrderLine[];
   total: number;
@@ -119,6 +129,7 @@ export function parseOrderInput(body: unknown): {
 
   const raw = body as Record<string, unknown>;
   const rawContact = (raw.contact ?? {}) as Record<string, unknown>;
+  const kind: OrderKind = raw.kind === "booking" ? "booking" : "order";
 
   const name = asString(rawContact.name);
   const phone = asString(rawContact.phone);
@@ -162,7 +173,8 @@ export function parseOrderInput(body: unknown): {
     }
   }
 
-  if (items.length === 0) {
+  // A booking has nothing to price, so an empty list is the normal case there.
+  if (kind === "order" && items.length === 0) {
     errors.push({ field: "items", message: "Your cart is empty." });
   }
 
@@ -172,8 +184,9 @@ export function parseOrderInput(body: unknown): {
 
   return {
     input: {
+      kind,
       contact: { name, phone, eventDate, guests, comment },
-      items,
+      items: kind === "booking" ? [] : items,
     },
     errors: [],
   };
@@ -289,6 +302,13 @@ function readPlacementsFromMock(
 export async function resolveOrder(
   input: OrderInput
 ): Promise<{ order?: ResolvedOrder; errors: ValidationError[] }> {
+  if (input.kind === "booking") {
+    return {
+      order: { kind: "booking", contact: input.contact, lines: [], total: 0 },
+      errors: [],
+    };
+  }
+
   const placementIds = input.items.map((item) => item.placementId);
 
   const priced =
@@ -329,7 +349,10 @@ export async function resolveOrder(
 
   const total = lines.reduce((sum, line) => sum + line.lineTotal, 0);
 
-  return { order: { contact: input.contact, lines, total }, errors: [] };
+  return {
+    order: { kind: "order", contact: input.contact, lines, total },
+    errors: [],
+  };
 }
 
 /** Plain-text summary shared by Telegram and e-mail. */
@@ -337,7 +360,9 @@ export function formatOrderMessage(order: OrderRecord): string {
   const { contact, lines, total } = order;
 
   const header = [
-    `Нове замовлення ${order.number}`,
+    order.kind === "booking"
+      ? `Запит на вечерю ${order.number}`
+      : `Нове замовлення ${order.number}`,
     formatOrderDateTime(order.createdAt),
     "",
     `Ім'я: ${contact.name}`,
@@ -371,6 +396,11 @@ export function formatOrderMessage(order: OrderRecord): string {
       ),
     ];
   });
+
+  // Nothing was priced, so a total would only invite the chef to quote zero.
+  if (order.kind === "booking") {
+    return [...header, "", "Гість ще не обирав страви."].join("\n");
+  }
 
   return [...header, ...body, "", `Разом: ${formatPrice(total)}`].join("\n");
 }

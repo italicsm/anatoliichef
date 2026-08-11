@@ -20,6 +20,14 @@ export default async function About({ locale }: { locale: Locale }) {
   const paragraphs = toParagraphs(t(content.body, locale));
   const specialities = toLines(t(content.specialities, locale));
 
+  const entries = [
+    ...specialities.map((term) => ({ term, description: null as string | null })),
+    ...dictionary.about.facts.map((fact) => ({
+      term: fact.term,
+      description: fact.description,
+    })),
+  ];
+
   return (
     <Section id="about" spacing="lg">
       <Container>
@@ -52,33 +60,37 @@ export default async function About({ locale }: { locale: Locale }) {
 
         <Divider spacing="lg" />
 
+        {/*
+          One block, two sources. The bare specialities come from the panel and
+          the chef edits them; the four with a sentence under them are written
+          copy and live in the dictionaries. They were stacked as two lists that
+          answered the same question — what this chef does — so they are one
+          list now, and a missing description is simply a shorter entry.
+        */}
         <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-24">
           <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
 
-          <ul className="grid gap-x-16 gap-y-5 sm:grid-cols-2">
-            {specialities.map((speciality) => (
-              <li
-                key={speciality}
-                className="border-b border-zinc-200 pb-5 text-sm uppercase tracking-[0.2em] text-zinc-700"
+          <dl className="grid gap-x-16 sm:grid-cols-2">
+            {/* The two sources are edited independently, so the same word can
+                appear in both; the index keeps the keys unique either way. */}
+            {entries.map((entry, index) => (
+              <div
+                key={`${index}-${entry.term}`}
+                className="border-b border-zinc-200 py-5 first:pt-0 sm:[&:nth-child(2)]:pt-0"
               >
-                {speciality}
-              </li>
-            ))}
-          </ul>
-        </div>
+                <dt className="text-sm uppercase tracking-[0.2em] text-zinc-800">
+                  {entry.term}
+                </dt>
 
-        <dl className="mt-16 grid gap-x-12 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {dictionary.about.facts.map((fact) => (
-            <div key={fact.term} className="border-t border-zinc-200 pt-6">
-              <dt className="text-sm uppercase tracking-[0.2em] text-zinc-800">
-                {fact.term}
-              </dt>
-              <dd className="mt-4 font-serif text-xl leading-8 text-zinc-500">
-                {fact.description}
-              </dd>
-            </div>
-          ))}
-        </dl>
+                {entry.description ? (
+                  <dd className="mt-3 font-serif text-lg leading-7 text-zinc-500">
+                    {entry.description}
+                  </dd>
+                ) : null}
+              </div>
+            ))}
+          </dl>
+        </div>
 
         <blockquote className="mx-auto mt-20 max-w-2xl text-center">
           <p className="font-serif text-3xl leading-snug text-zinc-700">

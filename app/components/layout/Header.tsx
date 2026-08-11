@@ -50,8 +50,7 @@ export default function Header({ locale, navItems, social }: HeaderProps) {
             burger holds everything. */}
         <div className="flex h-20 items-center justify-between gap-6">
           <Link href={`/${locale}`} aria-label={dictionary.header.home}>
-            <Logo size="sm" className="xl:hidden" />
-            <Logo size="md" className="hidden xl:inline-block" />
+            <Logo size="responsive" />
           </Link>
 
           <Nav items={navItems} className="hidden shrink-0 xl:block" />

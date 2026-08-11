@@ -32,7 +32,10 @@ export default async function Menu({ locale }: { locale: Locale }) {
           {menuTypes.map((menuType) => (
             <li key={menuType.id}>
               <Link href={`/${locale}/${menuType.slug}`} className="group block">
-                <div className="relative aspect-[4/5] w-full overflow-hidden">
+                {/* Landscape at every width: the portrait frame pushed the
+                    dish names below the fold on a laptop, and the photos are
+                    table settings — they read wide. */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden">
                   <Image
                     src={menuType.photo}
                     alt={t(menuType.title, locale)}

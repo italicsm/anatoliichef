@@ -6,6 +6,7 @@ import { getDictionary } from "../../lib/dictionary";
 import type { Locale } from "../../lib/locale";
 import type { NavItem } from "../../lib/navigation";
 import Button from "../ui/Button";
+import CloseButton from "../ui/CloseButton";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
@@ -86,13 +87,10 @@ export default function MobileMenu({
           <Container className="flex h-20 shrink-0 items-center justify-between">
             <Logo size="sm" />
 
-            <button
-              type="button"
+            <CloseButton
               onClick={() => setIsOpen(false)}
-              className="text-sm uppercase tracking-[0.2em] text-zinc-500 transition-colors hover:text-zinc-900"
-            >
-              {dictionary.header.close}
-            </button>
+              label={dictionary.header.close}
+            />
           </Container>
 
           <Container className="flex flex-1 flex-col justify-center overflow-y-auto py-10">

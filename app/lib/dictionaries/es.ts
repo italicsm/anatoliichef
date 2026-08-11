@@ -89,6 +89,15 @@ export const es: Dictionary = {
     thanksBody:
       "Su pedido ha sido enviado. Le llamaré en breve para concretar los detalles.",
   },
+  booking: {
+    title: "Solicitud de cena",
+    intro:
+      "Cuéntenos cuándo y para cuántos invitados: el chef se pondrá en contacto y le ayudará a componer el menú.",
+    submit: "Enviar la solicitud",
+    thanksTitle: "Gracias, hemos recibido su solicitud.",
+    thanksBody: "El chef se pondrá en contacto con usted en breve.",
+    close: "Cerrar",
+  },
   checkout: {
     name: "Nombre",
     phone: "Teléfono",

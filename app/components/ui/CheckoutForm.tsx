@@ -9,8 +9,15 @@ import Spinner from "./Spinner";
 
 type CheckoutFormProps = {
   locale: Locale;
-  onBack: () => void;
+  /** Omit to hide the back link — the booking dialog has a cross instead. */
+  onBack?: () => void;
   onSuccess: (orderNumber: string) => void;
+  /**
+   * "booking" sends the same contact details with no dishes, for a guest who
+   * has not opened the menu. Same endpoint, same validation, same inbox.
+   */
+  kind?: "order" | "booking";
+  submitLabel?: string;
 };
 
 const fieldStyles =
@@ -22,6 +29,8 @@ export default function CheckoutForm({
   locale,
   onBack,
   onSuccess,
+  kind = "order",
+  submitLabel,
 }: CheckoutFormProps) {
   const { lines, clear } = useCart();
   const dictionary = getDictionary(locale);
@@ -59,6 +68,7 @@ export default function CheckoutForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          kind,
           requestId: requestId.current,
           contact: {
             name: formData.get("name"),
@@ -68,10 +78,13 @@ export default function CheckoutForm({
             comment: formData.get("comment"),
           },
           // Only ids and quantities travel: the server prices the order.
-          items: lines.map((line) => ({
-            placementId: line.placementId,
-            quantity: line.quantity,
-          })),
+          items:
+            kind === "booking"
+              ? []
+              : lines.map((line) => ({
+                  placementId: line.placementId,
+                  quantity: line.quantity,
+                })),
         }),
       });
 
@@ -100,7 +113,12 @@ export default function CheckoutForm({
           ? String((payload as { number: unknown }).number)
           : "";
 
-      clear();
+      // A booking never touched the cart, so emptying it would throw away a
+      // selection the guest may still be working on.
+      if (kind === "order") {
+        clear();
+      }
+
       onSuccess(orderNumber);
     } catch {
       setErrors([
@@ -112,15 +130,18 @@ export default function CheckoutForm({
     }
   }
 
+  // The cart drawer and the booking dialog are both mounted at all times, so
+  // a constant id would exist twice in the document and every label would
+  // point at whichever field came first.
   return (
     <form onSubmit={handleSubmit} className="flex h-full flex-col">
       <div className="flex-1 space-y-7 overflow-y-auto px-8 py-8">
         <div>
-          <label htmlFor="order-name" className={labelStyles}>
+          <label htmlFor={`${kind}-name`} className={labelStyles}>
             {dictionary.checkout.name}
           </label>
           <input
-            id="order-name"
+            id={`${kind}-name`}
             name="name"
             required
             autoComplete="name"
@@ -129,11 +150,11 @@ export default function CheckoutForm({
         </div>
 
         <div>
-          <label htmlFor="order-phone" className={labelStyles}>
+          <label htmlFor={`${kind}-phone`} className={labelStyles}>
             {dictionary.checkout.phone}
           </label>
           <input
-            id="order-phone"
+            id={`${kind}-phone`}
             name="phone"
             type="tel"
             required
@@ -144,11 +165,11 @@ export default function CheckoutForm({
 
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <label htmlFor="order-date" className={labelStyles}>
+            <label htmlFor={`${kind}-date`} className={labelStyles}>
               {dictionary.checkout.date}
             </label>
             <input
-              id="order-date"
+              id={`${kind}-date`}
               name="eventDate"
               type="date"
               className={`${fieldStyles} mt-2`}
@@ -156,11 +177,11 @@ export default function CheckoutForm({
           </div>
 
           <div>
-            <label htmlFor="order-guests" className={labelStyles}>
+            <label htmlFor={`${kind}-guests`} className={labelStyles}>
               {dictionary.checkout.guests}
             </label>
             <input
-              id="order-guests"
+              id={`${kind}-guests`}
               name="guests"
               inputMode="numeric"
               className={`${fieldStyles} mt-2`}
@@ -169,11 +190,11 @@ export default function CheckoutForm({
         </div>
 
         <div>
-          <label htmlFor="order-comment" className={labelStyles}>
+          <label htmlFor={`${kind}-comment`} className={labelStyles}>
             {dictionary.checkout.comment}
           </label>
           <textarea
-            id="order-comment"
+            id={`${kind}-comment`}
             name="comment"
             rows={3}
             className={`${fieldStyles} mt-2 resize-none`}
@@ -199,16 +220,20 @@ export default function CheckoutForm({
           className="flex w-full items-center justify-center gap-3 rounded-full bg-zinc-700 px-8 py-4 text-sm uppercase tracking-[0.2em] text-white transition-colors hover:bg-black disabled:cursor-not-allowed disabled:bg-zinc-300"
         >
           {isPending ? <Spinner /> : null}
-          {isPending ? dictionary.checkout.sending : dictionary.checkout.submit}
+          {isPending
+            ? dictionary.checkout.sending
+            : submitLabel ?? dictionary.checkout.submit}
         </button>
 
-        <button
-          type="button"
-          onClick={onBack}
-          className="mt-4 w-full text-sm uppercase tracking-[0.15em] text-zinc-400 transition-colors hover:text-zinc-900"
-        >
-          {dictionary.checkout.back}
-        </button>
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            className="mt-4 w-full text-sm uppercase tracking-[0.15em] text-zinc-400 transition-colors hover:text-zinc-900"
+          >
+            {dictionary.checkout.back}
+          </button>
+        ) : null}
       </div>
     </form>
   );

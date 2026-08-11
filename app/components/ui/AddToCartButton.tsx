@@ -5,7 +5,7 @@ import { useCart } from "../../lib/cart-store";
 import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
 import type { Locale } from "../../lib/locale";
-import QuantityStepper from "./QuantityStepper";
+import QuantityStepper, { stepperButtonStyles } from "./QuantityStepper";
 
 type AddToCartButtonProps = {
   draft: CartLineDraft;
@@ -13,6 +13,11 @@ type AddToCartButtonProps = {
   className?: string;
 };
 
+/**
+ * A square + that becomes the quantity stepper once the dish is in the order.
+ * Same box, same glyph, same place — pressing it changes what is around the
+ * plus rather than replacing it, so nothing on the line moves.
+ */
 export default function AddToCartButton({
   draft,
   locale,
@@ -40,9 +45,12 @@ export default function AddToCartButton({
     <button
       type="button"
       onClick={() => add(draft)}
-      className={`border-b border-zinc-300 pb-1 text-xs uppercase tracking-[0.25em] text-zinc-500 transition-colors hover:border-zinc-900 hover:text-zinc-900 ${className}`}
+      // The name is in the label because the glyph alone would read as "plus
+      // button" repeated down the whole menu.
+      aria-label={`${dictionary.dish.addToOrder}: ${t(draft.title, locale)}`}
+      className={`shrink-0 ${stepperButtonStyles} ${className}`}
     >
-      {dictionary.dish.addToOrder}
+      +
     </button>
   );
 }

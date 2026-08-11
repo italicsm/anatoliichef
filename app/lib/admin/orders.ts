@@ -33,8 +33,12 @@ export type AdminOrderItem = {
   quantity: number;
 };
 
+/** A request sent from the Contact section carries no dishes. */
+export type AdminOrderKind = "order" | "booking";
+
 export type AdminOrder = {
   id: string;
+  kind: AdminOrderKind;
   number: string;
   createdAt: string;
   name: string;
@@ -67,7 +71,7 @@ export async function listOrders(limit = 100): Promise<AdminOrder[]> {
   const { data, error } = await requireClient()
     .from("orders")
     .select(
-      `id, number, created_at, name, phone, event_date, guests, comment, total, status,
+      `id, kind, number, created_at, name, phone, event_date, guests, comment, total, status,
        order_items (id, menu_slug, category_title, dish_title, portion, price, quantity)`
     )
     .order("created_at", { ascending: false })
@@ -89,6 +93,7 @@ export async function listOrders(limit = 100): Promise<AdminOrder[]> {
 
   type Row = {
     id: string;
+    kind: string;
     number: string;
     created_at: string;
     name: string;
@@ -103,6 +108,7 @@ export async function listOrders(limit = 100): Promise<AdminOrder[]> {
 
   return ((data ?? []) as unknown as Row[]).map((row) => ({
     id: row.id,
+    kind: row.kind === "booking" ? "booking" : "order",
     number: row.number,
     createdAt: row.created_at,
     name: row.name,
