@@ -117,7 +117,7 @@ export default function CartDrawer({ locale }: { locale: Locale }) {
                       {group.lines.map((line) => (
                         <li key={line.placementId} className="flex gap-5">
                           {line.photo ? (
-                            <div className="relative h-24 w-24 shrink-0 overflow-hidden bg-zinc-50">
+                            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-zinc-50">
                               <Image
                                 src={line.photo}
                                 alt={t(line.title, locale)}

@@ -32,7 +32,7 @@ export default async function About({ locale }: { locale: Locale }) {
     <Section id="about" spacing="lg">
       <Container>
         <div className="grid items-center gap-16 md:grid-cols-2 md:gap-24">
-          <div className="relative aspect-[2/3] w-full">
+          <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl">
             <Image
               src={content.photo ?? "/photo/tolic/tolic3.jpg"}
               alt={dictionary.about.photoAlt}
