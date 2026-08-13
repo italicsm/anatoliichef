@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getDictionary } from "../../lib/dictionary";
 import { t } from "../../lib/i18n";
 import type { Locale } from "../../lib/locale";
@@ -87,6 +88,26 @@ export default async function Contact({ locale }: { locale: Locale }) {
               <Eyebrow className="text-sm">{dictionary.contact.elsewhere}</Eyebrow>
 
               <SiteSocialLinks className="mt-6" />
+            </div>
+
+            {/*
+              An ornament, not information: it fills the space the contact list
+              leaves at the bottom of the column and says "Mediterranean"
+              without a word. Hidden below md, where that space does not exist
+              and the branch would only push the footer further away.
+
+              aria-hidden with an empty alt keeps it out of the screen reader's
+              path — there is nothing here to describe.
+            */}
+            <div className="relative mt-16 hidden h-40 md:block">
+              <Image
+                src="/photo/oliva.jpg"
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="(min-width: 768px) 45vw, 0px"
+                className="object-contain object-right-bottom"
+              />
             </div>
           </div>
         </div>
