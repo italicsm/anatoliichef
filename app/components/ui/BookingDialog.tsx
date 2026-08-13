@@ -34,6 +34,14 @@ export default function BookingDialog({ locale }: { locale: Locale }) {
 
       <dialog
         ref={dialogRef}
+        // Same as the cart: a click on the backdrop is dispatched to the dialog
+        // element itself, while anything inside the panel has a deeper target
+        // and is left alone. Two panels that look alike must close alike.
+        onClick={(event) => {
+          if (event.target === dialogRef.current) {
+            dialogRef.current?.close();
+          }
+        }}
         aria-label={dictionary.booking.title}
         className="drawer-dialog fixed inset-y-0 right-0 m-0 h-full max-h-none w-full max-w-none bg-white p-0 backdrop:bg-white/70 sm:w-[28rem]"
       >

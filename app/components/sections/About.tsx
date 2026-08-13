@@ -68,7 +68,26 @@ export default async function About({ locale }: { locale: Locale }) {
           list now, and a missing description is simply a shorter entry.
         */}
         <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-24">
-          <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
+          <div className="flex flex-col justify-between gap-12">
+            <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
+
+            {/*
+              The heading leaves this column almost empty next to a long list,
+              so the nuts sit at its foot and balance the block. Ornament, not
+              information: empty alt, aria-hidden, and gone below md where the
+              column collapses and there is no emptiness left to fill.
+            */}
+            <div className="relative hidden h-64 md:block">
+              <Image
+                src="/photo/pistacho.jpg"
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="(min-width: 768px) 30vw, 0px"
+                className="object-contain object-left-bottom"
+              />
+            </div>
+          </div>
 
           <dl className="grid gap-x-16 sm:grid-cols-2">
             {/* The two sources are edited independently, so the same word can
