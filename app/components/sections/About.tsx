@@ -102,11 +102,16 @@ export default async function About({ locale }: { locale: Locale }) {
         </blockquote>
 
         {/*
-          Below the quote, in the left margin, filling the long white gap the
-          section leaves before the contacts. Ornament, not information: empty
-          alt, aria-hidden, and gone below md where that gap does not exist.
+          Below the quote, in the left margin. Ornament, not information: empty
+          alt, aria-hidden, and gone below md.
+
+          The negative bottom margin is the point. Two things stack under these
+          nuts: the white the photographer left inside the file — a quarter of
+          its height — and the padding of two sections meeting. Together they
+          pushed the contacts an entire screen away. Pulling the box up eats the
+          slack without touching the spacing every other section relies on.
         */}
-        <div className="relative mt-12 hidden h-[10.4rem] md:block">
+        <div className="relative mt-6 -mb-24 hidden h-52 md:block">
           <Image
             src="/photo/pistacho1.jpg"
             alt=""
