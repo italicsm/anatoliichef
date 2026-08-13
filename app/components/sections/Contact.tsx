@@ -99,7 +99,7 @@ export default async function Contact({ locale }: { locale: Locale }) {
               aria-hidden with an empty alt keeps it out of the screen reader's
               path — there is nothing here to describe.
             */}
-            <div className="relative mt-16 hidden h-40 md:block">
+            <div className="relative mt-12 hidden h-[22rem] md:block">
               <Image
                 src="/photo/oliva.jpg"
                 alt=""
