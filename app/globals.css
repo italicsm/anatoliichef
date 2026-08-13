@@ -3,6 +3,14 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /*
+   * Chrome on Android darkens pages that never say which schemes they support,
+   * inverting a design built entirely on white. "only light" is the opt-out:
+   * it declares the single supported scheme and asks the browser not to invent
+   * the other one. A photographer's white is not a background colour here — it
+   * is what the hero photograph dissolves into.
+   */
+  color-scheme: only light;
 }
 
 @theme inline {
@@ -23,6 +31,7 @@ html {
   scroll-padding-top: 5rem;
 }
 
+html,
 body {
   background: var(--background);
   color: var(--foreground);
@@ -141,6 +150,37 @@ body {
   .menu-dialog[open] {
     opacity: 0;
     transform: translateY(-0.75rem);
+  }
+}
+
+/*
+ * The hero photograph has its soft edges painted into the file, but only on
+ * the right: the left fifth is empty white kept there for the desktop
+ * composition. On a phone that band is cropped away, and the crop leaves a
+ * hard vertical line where the file had a dissolve.
+ *
+ * This mask paints the missing dissolve back. It is a class rather than a
+ * utility because the same three stops are needed on both the mask and its
+ * webkit twin, and repeating an arbitrary value that long inline would hide
+ * what it does.
+ */
+.hero-photo-fade {
+  --hero-fade: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 13%,
+    #000 97%,
+    transparent 100%
+  );
+  -webkit-mask-image: var(--hero-fade);
+  mask-image: var(--hero-fade);
+}
+
+/* Above xl nothing is cropped, so the file's own edges are the right ones. */
+@media (min-width: 80rem) {
+  .hero-photo-fade {
+    -webkit-mask-image: none;
+    mask-image: none;
   }
 }
 

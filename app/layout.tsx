@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { headers } from "next/headers";
 import { fontVariables } from "./fonts";
 import { DEFAULT_LOCALE, isLocale } from "./lib/locale";
@@ -12,6 +12,16 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Anatolii Lukianchuk",
   description: "Private Chef in Barcelona",
+};
+
+/**
+ * Says the same thing as `color-scheme` in the stylesheet, but in the document
+ * head where a browser reads it before the first paint — otherwise a phone in
+ * dark mode shows a dark flash and then the white page.
+ */
+export const viewport: Viewport = {
+  colorScheme: "light",
+  themeColor: "#ffffff",
 };
 
 export default async function RootLayout({

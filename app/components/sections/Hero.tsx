@@ -85,7 +85,7 @@ export default async function Hero({ locale }: { locale: Locale }) {
           edge, which crops away that empty band and nothing else. The subject
           gains a third of its width without touching the file.
         */}
-        <div className="relative z-0 mt-12 aspect-[3/4] w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:aspect-square xl:w-auto">
+        <div className="hero-photo-fade relative z-0 mt-12 aspect-[3/4] w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:aspect-square xl:w-auto">
           <Image
             src="/photo/tolic/tolic4.jpg"
             alt={dictionary.hero.photoAlt}
