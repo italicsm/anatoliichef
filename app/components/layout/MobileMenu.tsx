@@ -101,7 +101,9 @@ export default function MobileMenu({
                     <Link
                       href={item.href}
                       onClick={() => setIsOpen(false)}
-                      className="block py-5 text-2xl uppercase tracking-[0.15em] text-zinc-900"
+                      // Smaller than it looks: the padding keeps the tap target
+                      // tall, so the type can be quiet without becoming fiddly.
+                      className="block py-5 text-lg uppercase tracking-[0.15em] text-zinc-900"
                     >
                       {item.label}
                     </Link>
