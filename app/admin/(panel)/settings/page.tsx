@@ -16,6 +16,20 @@ export default async function SettingsPage() {
     describeNotificationSettings(),
   ]);
 
+  // The page describes what is happening, not what ought to be set up: the
+  // wording below flips once a channel is actually able to deliver.
+  // A channel counts only when every piece it needs is present: a token with
+  // nowhere to send to delivers exactly as much as no token at all.
+  const telegramReady =
+    notifications.telegramToken.isSet && notifications.telegramChat.value !== "";
+
+  const emailReady =
+    notifications.resendKey.isSet &&
+    notifications.emailTo.value !== "" &&
+    notifications.emailFrom.value !== "";
+
+  const isDelivering = telegramReady || emailReady;
+
   return (
     <div>
       <h1 className="text-2xl font-extralight tracking-wide text-zinc-900">
@@ -29,9 +43,10 @@ export default async function SettingsPage() {
 
         <p className="mt-4 max-w-2xl text-sm text-zinc-500">
           Кожне замовлення й кожен запит із сайту йде обома каналами одразу.
-          Достатньо одного з них: якщо Telegram недоступний, спрацює пошта, і
-          навпаки. Поки не налаштований жоден, замовлення пишуться в журнал
-          сервера — вони не губляться, але й нікуди не приходять.
+          Достатньо одного: якщо Telegram недоступний, спрацює пошта, і навпаки.
+          {isDelivering
+            ? " Кнопка «Перевірити звʼязок» унизу показує, чи канали живі саме зараз."
+            : " Зараз не налаштований жоден, тож замовлення лише пишуться в журнал сервера — вони не губляться, але й нікуди не приходять."}
         </p>
 
         <div className="mt-8">
@@ -65,9 +80,10 @@ export default async function SettingsPage() {
         </h2>
 
         <p className="mt-4 max-w-2xl text-sm text-zinc-500">
-          У формі страви кнопка «Переклад АІ» заповнює англійську та іспанську
-          з української через Gemini. Переклад ніколи не запускається сам:
-          спершу ви бачите результат у полях, потім зберігаєте.
+          Кнопка «Переклад АІ» у формах страв, категорій, меню та цих сторінок
+          заповнює англійську й іспанську з української через Gemini. Переклад
+          ніколи не запускається сам: спершу ви бачите результат у полях, потім
+          зберігаєте.
         </p>
 
         <div className="mt-8">

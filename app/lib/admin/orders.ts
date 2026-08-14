@@ -144,6 +144,24 @@ export async function setOrderStatus(
   }
 }
 
+/**
+ * The order's items go with it: `order_items.order_id` is declared
+ * `on delete cascade`, so the database removes them itself. Deleting them here
+ * as well would be a second round trip that can half-fail.
+ *
+ * There is no soft delete. An order the chef removes is a mistake, a test or a
+ * cancellation he has already dealt with by phone — keeping a hidden copy of
+ * someone's name and number after he asked for it to go would be the wrong
+ * default for personal data.
+ */
+export async function deleteOrder(id: string): Promise<void> {
+  const { error } = await requireClient().from("orders").delete().eq("id", id);
+
+  if (error) {
+    throw new AdminError(error.message);
+  }
+}
+
 export async function countNewOrders(): Promise<number> {
   const { count, error } = await requireClient()
     .from("orders")

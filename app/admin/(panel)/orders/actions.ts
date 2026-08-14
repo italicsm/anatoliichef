@@ -2,7 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { AdminError } from "../../../lib/admin/categories";
-import { isOrderStatus, setOrderStatus } from "../../../lib/admin/orders";
+import {
+  deleteOrder,
+  isOrderStatus,
+  setOrderStatus,
+} from "../../../lib/admin/orders";
 
 export type ActionState = {
   error?: string;
@@ -31,6 +35,31 @@ export async function setOrderStatusAction(
         error instanceof AdminError
           ? error.message
           : "Не вдалося змінити статус.",
+    };
+  }
+}
+
+export async function deleteOrderAction(
+  _previous: ActionState,
+  formData: FormData
+): Promise<ActionState> {
+  const id = String(formData.get("id") ?? "");
+
+  if (!id) {
+    return { error: "Не вдалося визначити, яке замовлення видалити." };
+  }
+
+  try {
+    await deleteOrder(id);
+    revalidatePath("/admin/orders");
+
+    return { savedAt: Date.now() };
+  } catch (error) {
+    return {
+      error:
+        error instanceof AdminError
+          ? error.message
+          : "Не вдалося видалити замовлення.",
     };
   }
 }

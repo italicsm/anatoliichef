@@ -98,7 +98,7 @@ export default function CategoryForm({
           name="photo"
           currentUrl={photoUrl}
           removeName="removePhoto"
-          hint="Зберігається в базі. На сайті поки не показується — скажіть, і я виведу його заголовком категорії."
+          hint="Зберігається в базі. На сайті поки не показується."
         />
       ) : null}
 

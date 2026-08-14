@@ -1,3 +1,4 @@
+import OrderDeleteButton from "../../../components/admin/OrderDeleteButton";
 import OrderStatusControl from "../../../components/admin/OrderStatusControl";
 import { listOrders } from "../../../lib/admin/orders";
 import { formatPrice } from "../../../lib/format";
@@ -79,6 +80,8 @@ export default async function OrdersPage() {
                 </span>
 
                 <OrderStatusControl id={order.id} status={order.status} />
+
+                <OrderDeleteButton id={order.id} number={order.number} />
               </div>
             </div>
 

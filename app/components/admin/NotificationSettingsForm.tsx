@@ -19,10 +19,10 @@ const CHANNEL_LABELS: Record<string, string> = {
   console: "Журнал сервера",
 };
 
-function sourceNote(source: "env" | "database" | null): string | null {
+function sourceNote(source: "env" | "database" | null): string {
   return source === "env"
-    ? "Задано змінною оточення — вона має пріоритет над збереженим тут."
-    : null;
+    ? " Задано змінною оточення — вона має пріоритет над збереженим тут."
+    : "";
 }
 
 export default function NotificationSettingsForm({
@@ -98,12 +98,13 @@ export default function NotificationSettingsForm({
             }
             className={`${adminFieldStyles} mt-2`}
           />
+          {/* The panel knows whether this is set, so it says what to do next
+              rather than repeating the first-time instructions forever. */}
           <p className="mt-3 text-xs text-zinc-400">
-            Створюється в Telegram у боті @BotFather за хвилину. Показати
-            збережений токен неможливо — лише замінити або прибрати.
-            {sourceNote(settings.telegramToken.source)
-              ? ` ${sourceNote(settings.telegramToken.source)}`
-              : ""}
+            {settings.telegramToken.isSet
+              ? "Бот підключений. Заповніть це поле лише якщо міняєте бота — показати збережений токен неможливо, лише замінити або прибрати."
+              : "Створюється в Telegram у боті @BotFather за хвилину."}
+            {sourceNote(settings.telegramToken.source)}
           </p>
         </div>
 
@@ -130,14 +131,10 @@ export default function NotificationSettingsForm({
             placeholder="123456789 або @назва_каналу"
           />
           <p className="mt-3 text-xs text-zinc-400">
-            Бот не вміє писати людині за ніком — йому потрібен числовий ID, і
-            він дізнається його лише після того, як ви першим напишете боту.
-            Напишіть йому будь-що — у групі саме «/start» — тоді натисніть
-            «Знайти чати». Кнопка скористається токеном із поля вище, навіть
-            якщо ви ще не зберігали.
-            {sourceNote(settings.telegramChat.source)
-              ? ` ${sourceNote(settings.telegramChat.source)}`
-              : ""}
+            {settings.telegramChat.value
+              ? "Замовлення йдуть у цей чат. Щоб надсилати їх в інше місце: напишіть боту з потрібного чату — у групі саме «/start» — і натисніть «Знайти чати»."
+              : "Бот не вміє писати людині за ніком — йому потрібен числовий ID, і він дізнається його лише після того, як ви першим напишете боту. Напишіть йому будь-що — у групі саме «/start» — тоді натисніть «Знайти чати»."}
+            {sourceNote(settings.telegramChat.source)}
           </p>
 
           <button
@@ -195,11 +192,10 @@ export default function NotificationSettingsForm({
             className={`${adminFieldStyles} mt-2`}
           />
           <p className="mt-3 text-xs text-zinc-400">
-            Пошта — запасний канал на випадок, якщо Telegram недоступний. Без
-            ключа вона просто не використовується.
-            {sourceNote(settings.resendKey.source)
-              ? ` ${sourceNote(settings.resendKey.source)}`
-              : ""}
+            {settings.resendKey.isSet
+              ? "Пошта підключена як запасний канал: спрацює, якщо Telegram виявиться недоступним. Заповніть поле лише щоб замінити ключ."
+              : "Пошта — запасний канал на випадок, якщо Telegram недоступний. Без ключа вона просто не використовується."}
+            {sourceNote(settings.resendKey.source)}
           </p>
         </div>
 
@@ -279,8 +275,8 @@ export default function NotificationSettingsForm({
         </button>
 
         <p className="mt-3 text-xs text-zinc-400">
-          Надішле тестове повідомлення збереженими каналами. Спершу збережіть
-          зміни.
+          Надішле тестове повідомлення тими каналами, які збережені зараз —
+          щойно введені, але не збережені зміни воно не бачить.
         </p>
 
         {testError ? (
