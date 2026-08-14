@@ -98,8 +98,13 @@ export default async function Contact({ locale }: { locale: Locale }) {
 
               aria-hidden with an empty alt keeps it out of the screen reader's
               path — there is nothing here to describe.
+
+              A quarter of the file below the branch is empty white, and under
+              that sits the section's bottom padding. Both are invisible and
+              both push the footer down, so the box is pulled up by roughly the
+              height of the first one.
             */}
-            <div className="relative mt-12 hidden h-[22rem] md:block">
+            <div className="relative mt-8 -mb-24 hidden h-[24rem] md:block">
               <Image
                 src="/photo/oliva.jpg"
                 alt=""

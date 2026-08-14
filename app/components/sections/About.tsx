@@ -105,15 +105,15 @@ export default async function About({ locale }: { locale: Locale }) {
           Below the quote, in the left margin. Ornament, not information: empty
           alt, aria-hidden, and gone below md.
 
-          The negative bottom margin is the point. Two things stack under these
-          nuts: the white the photographer left inside the file — a quarter of
+          The negative bottom margin is the point. Two things stack under the
+          crumbs: the white the photographer left inside the file — a sixth of
           its height — and the padding of two sections meeting. Together they
           pushed the contacts an entire screen away. Pulling the box up eats the
           slack without touching the spacing every other section relies on.
         */}
-        <div className="relative mt-6 -mb-24 hidden h-52 md:block">
+        <div className="relative mt-2 -mb-40 hidden h-52 md:block">
           <Image
-            src="/photo/pistacho1.jpg"
+            src="/photo/pan.jpg"
             alt=""
             aria-hidden="true"
             fill
