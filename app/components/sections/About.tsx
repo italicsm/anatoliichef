@@ -68,7 +68,32 @@ export default async function About({ locale }: { locale: Locale }) {
           list now, and a missing description is simply a shorter entry.
         */}
         <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-24">
-          <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
+          <div className="flex flex-col justify-between gap-12">
+            <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
+
+            {/*
+              The heading leaves this column nearly empty beside a long list,
+              so the crumbs sit at its foot: justify-between pins them to the
+              bottom, and the list next door decides how far down that is.
+
+              Ornament, not information — empty alt, aria-hidden — and gone
+              below md, where the column collapses and the emptiness with it.
+
+              The box carries the file's own proportions rather than a height,
+              so it is exactly as tall as the picture, with no invisible slack
+              to compensate for.
+            */}
+            <div className="relative hidden aspect-[365/181] w-72 md:block">
+              <Image
+                src="/photo/pan1.jpg"
+                alt=""
+                aria-hidden="true"
+                fill
+                sizes="(min-width: 768px) 30vw, 0px"
+                className="object-contain object-left-bottom"
+              />
+            </div>
+          </div>
 
           <dl className="grid gap-x-16 sm:grid-cols-2">
             {/* The two sources are edited independently, so the same word can
@@ -100,27 +125,6 @@ export default async function About({ locale }: { locale: Locale }) {
             <Eyebrow className="text-sm">Anatolii Lukianchuk</Eyebrow>
           </footer>
         </blockquote>
-
-        {/*
-          Below the quote, in the left margin. Ornament, not information: empty
-          alt, aria-hidden, and gone below md.
-
-          The negative bottom margin is the point. Two things stack under the
-          crumbs: the white the photographer left inside the file — a sixth of
-          its height — and the padding of two sections meeting. Together they
-          pushed the contacts an entire screen away. Pulling the box up eats the
-          slack without touching the spacing every other section relies on.
-        */}
-        <div className="relative mt-2 -mb-40 hidden h-52 md:block">
-          <Image
-            src="/photo/pan.jpg"
-            alt=""
-            aria-hidden="true"
-            fill
-            sizes="(min-width: 768px) 30vw, 0px"
-            className="object-contain object-left"
-          />
-        </div>
       </Container>
     </Section>
   );

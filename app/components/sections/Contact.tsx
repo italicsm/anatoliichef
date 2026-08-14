@@ -99,12 +99,12 @@ export default async function Contact({ locale }: { locale: Locale }) {
               aria-hidden with an empty alt keeps it out of the screen reader's
               path — there is nothing here to describe.
 
-              A quarter of the file below the branch is empty white, and under
-              that sits the section's bottom padding. Both are invisible and
-              both push the footer down, so the box is pulled up by roughly the
-              height of the first one.
+              The box carries the file's own proportions rather than a height.
+              A fixed height left almost 200px of empty box above the branch,
+              because the picture is wide and the column narrow — the image ran
+              out of width long before it filled that height.
             */}
-            <div className="relative mt-8 -mb-24 hidden h-[24rem] md:block">
+            <div className="relative mt-8 -mb-24 hidden aspect-[1536/516] w-full md:block">
               <Image
                 src="/photo/oliva.jpg"
                 alt=""
