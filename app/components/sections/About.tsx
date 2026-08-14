@@ -28,8 +28,12 @@ export default async function About({ locale }: { locale: Locale }) {
     })),
   ];
 
+  // Half the usual floor: this section ends with a quote and an ornament
+  // rather than with something to read, so its bottom padding met the next
+  // section's and left a hole. `pb` is emitted after `py` in Tailwind's order,
+  // which is what lets it override the spacing preset.
   return (
-    <Section id="about" spacing="lg">
+    <Section id="about" spacing="lg" className="pb-10 md:pb-14">
       <Container>
         <div className="grid items-center gap-16 md:grid-cols-2 md:gap-24">
           <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl">
@@ -83,7 +87,7 @@ export default async function About({ locale }: { locale: Locale }) {
               so it is exactly as tall as the picture, with no invisible slack
               to compensate for.
             */}
-            <div className="relative hidden aspect-[365/181] w-72 md:block">
+            <div className="relative hidden aspect-[365/181] w-[14.4rem] md:block">
               <Image
                 src="/photo/pan1.jpg"
                 alt=""
