@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HashLink from "./HashLink";
 
 type ButtonSize = "sm" | "md";
 
@@ -34,10 +35,14 @@ export default function Button({
   const styles = `${baseStyles} ${sizeStyles[size]} ${className}`;
 
   if (href) {
+    // A link to a section of the current page needs the click taken over, or
+    // pressing it twice does nothing the second time. See HashLink.
+    const Component = href.includes("#") ? HashLink : Link;
+
     return (
-      <Link href={href} className={styles} onClick={onClick}>
+      <Component href={href} className={styles} onClick={onClick}>
         {children}
-      </Link>
+      </Component>
     );
   }
 

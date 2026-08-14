@@ -1,6 +1,6 @@
-import Link from "next/link";
 import type { NavItem } from "../../lib/navigation";
 import BoldOnHover from "../ui/BoldOnHover";
+import HashLink from "../ui/HashLink";
 
 type NavProps = {
   items: NavItem[];
@@ -17,12 +17,12 @@ export default function Nav({ items, className = "" }: NavProps) {
       <ul className="flex items-center gap-6">
         {items.map((item) => (
           <li key={item.href}>
-            <Link
+            <HashLink
               href={item.href}
               className="group whitespace-nowrap text-sm uppercase tracking-[0.2em] text-zinc-800 transition-colors hover:text-zinc-900"
             >
               <BoldOnHover>{item.label}</BoldOnHover>
-            </Link>
+            </HashLink>
           </li>
         ))}
       </ul>

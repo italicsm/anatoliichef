@@ -227,6 +227,20 @@ container of its own height, it would stick for zero pixels.
 
 ---
 
+### A link to the current address does nothing
+
+Pressing "Contacts" scrolled to the contacts. Scrolling back up and pressing it
+again did nothing at all: the address was still `#contact`, so from the
+browser's point of view there was nowhere to go. `HashLink` takes the click
+over and scrolls whenever the target exists on the page, whatever the address
+says; smoothness and the sticky-header offset still come from CSS.
+
+**Consequence.** `Button` switches to `HashLink` on its own when the href
+contains a `#`, so the same trap cannot be walked into by using a button
+instead of a link.
+
+---
+
 ## Supabase
 
 ### The seam held

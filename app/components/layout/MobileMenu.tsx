@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { getDictionary } from "../../lib/dictionary";
 import type { Locale } from "../../lib/locale";
@@ -9,6 +8,7 @@ import Button from "../ui/Button";
 import CloseButton from "../ui/CloseButton";
 import Container from "../ui/Container";
 import Eyebrow from "../ui/Eyebrow";
+import HashLink from "../ui/HashLink";
 import LanguageSwitcher from "../ui/LanguageSwitcher";
 import Logo from "../ui/Logo";
 import type { SocialName } from "../ui/SocialIcon";
@@ -98,7 +98,7 @@ export default function MobileMenu({
               <ul>
                 {navItems.map((item) => (
                   <li key={item.href} className="border-b border-zinc-200">
-                    <Link
+                    <HashLink
                       href={item.href}
                       onClick={() => setIsOpen(false)}
                       // Smaller than it looks: the padding keeps the tap target
@@ -106,7 +106,7 @@ export default function MobileMenu({
                       className="block py-5 text-lg uppercase tracking-[0.15em] text-zinc-900"
                     >
                       {item.label}
-                    </Link>
+                    </HashLink>
                   </li>
                 ))}
               </ul>

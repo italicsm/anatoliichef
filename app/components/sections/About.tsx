@@ -72,32 +72,7 @@ export default async function About({ locale }: { locale: Locale }) {
           list now, and a missing description is simply a shorter entry.
         */}
         <div className="grid gap-12 md:grid-cols-[minmax(0,1fr)_2fr] md:gap-24">
-          <div className="flex flex-col justify-between gap-12">
-            <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
-
-            {/*
-              The heading leaves this column nearly empty beside a long list,
-              so the crumbs sit at its foot: justify-between pins them to the
-              bottom, and the list next door decides how far down that is.
-
-              Ornament, not information — empty alt, aria-hidden — and gone
-              below md, where the column collapses and the emptiness with it.
-
-              The box carries the file's own proportions rather than a height,
-              so it is exactly as tall as the picture, with no invisible slack
-              to compensate for.
-            */}
-            <div className="relative hidden aspect-[365/181] w-[14.4rem] md:block">
-              <Image
-                src="/photo/pan1.jpg"
-                alt=""
-                aria-hidden="true"
-                fill
-                sizes="(min-width: 768px) 30vw, 0px"
-                className="object-contain object-left-bottom"
-              />
-            </div>
-          </div>
+          <Eyebrow className="text-sm">{dictionary.about.specialities}</Eyebrow>
 
           <dl className="grid gap-x-16 sm:grid-cols-2">
             {/* The two sources are edited independently, so the same word can
@@ -128,6 +103,25 @@ export default async function About({ locale }: { locale: Locale }) {
           <footer className="mt-8">
             <Eyebrow className="text-sm">Anatolii Lukianchuk</Eyebrow>
           </footer>
+
+          {/*
+            Centred under the signature, where it reads as a full stop to the
+            section rather than as a picture of something. Ornament, not
+            information — empty alt, aria-hidden — and gone below md.
+
+            The box carries the file's own proportions rather than a height, so
+            it is exactly as tall as the picture, with no invisible slack.
+          */}
+          <div className="relative mx-auto mt-6 hidden aspect-[365/181] w-[11.5rem] md:block">
+            <Image
+              src="/photo/pan1.jpg"
+              alt=""
+              aria-hidden="true"
+              fill
+              sizes="(min-width: 768px) 12rem, 0px"
+              className="object-contain"
+            />
+          </div>
         </blockquote>
       </Container>
     </Section>
