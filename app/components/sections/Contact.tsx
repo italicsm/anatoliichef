@@ -107,7 +107,7 @@ export default async function Contact({ locale }: { locale: Locale }) {
               because the picture is wide and the column narrow — the image ran
               out of width long before it filled that height.
             */}
-            <div className="relative mt-14 -mb-24 hidden aspect-[1536/516] w-full md:block">
+            <div className="relative mt-20 -mb-20 hidden aspect-[1536/516] w-full md:block">
               <Image
                 src="/photo/oliva.jpg"
                 alt=""
