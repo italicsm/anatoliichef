@@ -37,8 +37,11 @@ export default async function Contact({ locale }: { locale: Locale }) {
     { label: dictionary.contact.location, value: t(content.location, locale) },
   ];
 
+  // A little less ceiling than the preset: the section above ends with an
+  // ornament rather than a paragraph, so the two paddings meeting made a hole
+  // instead of a breath.
   return (
-    <Section id="contact" spacing="lg">
+    <Section id="contact" spacing="lg" className="md:pt-24">
       <Container>
         <div className="grid gap-16 md:grid-cols-2 md:gap-24">
           <div className="max-w-xl">

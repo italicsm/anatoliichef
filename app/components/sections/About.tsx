@@ -28,12 +28,12 @@ export default async function About({ locale }: { locale: Locale }) {
     })),
   ];
 
-  // Half the usual floor: this section ends with a quote and an ornament
-  // rather than with something to read, so its bottom padding met the next
-  // section's and left a hole. `pb` is emitted after `py` in Tailwind's order,
-  // which is what lets it override the spacing preset.
+  // This section ends with a quote and an ornament rather than with something
+  // to read, so it needs far less floor than ceiling — otherwise its bottom
+  // padding meets the next section's and leaves a hole. `pb` is emitted after
+  // `py` in Tailwind's order, which is what lets it override the preset.
   return (
-    <Section id="about" spacing="lg" className="pb-10 md:pb-14">
+    <Section id="about" spacing="lg" className="pb-12 md:pb-14">
       <Container>
         <div className="grid items-center gap-16 md:grid-cols-2 md:gap-24">
           <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl">
@@ -112,7 +112,7 @@ export default async function About({ locale }: { locale: Locale }) {
             The box carries the file's own proportions rather than a height, so
             it is exactly as tall as the picture, with no invisible slack.
           */}
-          <div className="relative mx-auto mt-6 hidden aspect-[365/181] w-[11.5rem] md:block">
+          <div className="relative mx-auto mt-10 hidden aspect-[365/181] w-[11.5rem] md:block">
             <Image
               src="/photo/pan1.jpg"
               alt=""
