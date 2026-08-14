@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { startTransition, useActionState, useOptimistic } from "react";
 import {
   setOrderStatusAction,
   type ActionState,
@@ -32,30 +32,48 @@ export default function OrderStatusControl({
   id,
   status,
 }: OrderStatusControlProps) {
-  const [state, action, isPending] = useActionState<ActionState, FormData>(
+  const [state, formAction, isPending] = useActionState<ActionState, FormData>(
     setOrderStatusAction,
     {}
   );
 
   /**
-   * The chosen status lives here, not in the server's prop.
+   * Two earlier attempts at this were both wrong, and in opposite ways.
    *
-   * With an uncontrolled select the colours only changed once the page had
-   * re-rendered with fresh data, and until then the row still showed the old
-   * status — the database had already been updated, the screen had not. Holding
-   * it locally makes the change immediate and independent of when the refresh
-   * lands.
+   * An uncontrolled select left the colours showing the previous status until
+   * the page came back with fresh data. Copying the prop into `useState` and
+   * syncing it with an effect was worse: the effect also fired for the stale
+   * render that arrives first, so the word jumped back and then forward again.
+   *
+   * `useOptimistic` is the mechanism made for this. It shows the chosen value
+   * for as long as the action is in flight and then hands control back to the
+   * server's value on its own — no effect, no second copy of the truth, and
+   * nothing to keep in sync.
    */
-  const [current, setCurrent] = useState<OrderStatus>(status);
+  const [shownStatus, showStatus] = useOptimistic<OrderStatus, OrderStatus>(
+    status,
+    (_previous, next) => next
+  );
 
-  // The server is still the source of truth: if the page comes back with a
-  // different value — someone else's edit, or ours having failed — it wins.
-  useEffect(() => setCurrent(status), [status]);
+  function handleChange(next: OrderStatus) {
+    const formData = new FormData();
 
-  const styles = styleByStatus[current];
+    formData.set("id", id);
+    formData.set("status", next);
+
+    // Both calls belong to the same transition: React only accepts an
+    // optimistic update from inside one, and pairing them is what ties the
+    // shown value to the request that is carrying it.
+    startTransition(() => {
+      showStatus(next);
+      formAction(formData);
+    });
+  }
+
+  const styles = styleByStatus[shownStatus];
 
   return (
-    <form action={action} className="flex flex-wrap items-center gap-3">
+    <form action={formAction} className="flex flex-wrap items-center gap-3">
       <input type="hidden" name="id" value={id} />
 
       <span
@@ -63,16 +81,15 @@ export default function OrderStatusControl({
         className={`h-2.5 w-2.5 shrink-0 rounded-full transition-colors ${styles.dot}`}
       />
 
-      {/* Submitting on change keeps it to one click; the button is the
-          fallback for browsers with scripting restrictions. */}
+      {/* Changing it is the whole interaction, so it submits on change; the
+          button below is the fallback for browsers with scripting off. */}
       <select
         name="status"
-        value={current}
-        disabled={isPending}
-        onChange={(event) => {
-          setCurrent(event.currentTarget.value as OrderStatus);
-          event.currentTarget.form?.requestSubmit();
-        }}
+        value={shownStatus}
+        aria-busy={isPending}
+        onChange={(event) =>
+          handleChange(event.currentTarget.value as OrderStatus)
+        }
         className={`border-b border-zinc-300 bg-transparent py-1 text-xs uppercase tracking-[0.2em] outline-none transition-colors focus:border-zinc-900 ${styles.text}`}
       >
         {ORDER_STATUSES.map((option) => (
