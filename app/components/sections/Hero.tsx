@@ -67,13 +67,34 @@ export default async function Hero({ locale }: { locale: Locale }) {
           compensate for it. -top-20 cancels the section's pt-20 to reach under
           the header.
 
-          The right offset is a clamped overhang rather than a fixed number.
-          −5rem pushes the frame 80px past the container, 104px past the header
-          content line; max() with (80rem − 100vw) / 2 — the gap between the
-          container and the window — stops it at the window edge on narrower
-          screens. Going flush to that edge would clip the photo's feathered
-          border and replace the dissolve with a hard vertical cut, which is
-          why the overhang is deliberately capped short of it.
+          The right offset is what makes the composition hold its shape when the
+          window is wide but short.
+
+          The photo is as tall as the section, so its size follows the height.
+          The container does not: it is 1280px whatever happens. On a 1920×800
+          window the photo is therefore 800px inside a 1280px frame — the same
+          picture as on 1600×900, but with the photo a hundred pixels smaller
+          and pushed the same distance right. That gap is what looked wrong.
+
+          So the photo moves in by exactly as much as it shrank:
+          (80rem − --hero-frame) / 2 is the half-difference between the constant
+          frame and the frame this height deserves, and −5rem is the overhang
+          the design has always had past the container's edge. At 900px tall
+          and above the two cancel and nothing moves; at 800 the photo comes
+          71px closer to the text, at 768 — 94px.
+
+          max() with (80rem − 100vw) / 2 stops the photo at the window edge on
+          narrow screens. That term measures the container's real gutter, so it
+          stays 80rem and not the virtual frame — the guard has to describe
+          where the window actually ends. Going flush to that edge would clip
+          the photo's feathered border and replace the dissolve with a hard
+          cut, which is why the overhang stays short of it.
+
+          The container itself is deliberately left at 1280: narrowing it would
+          have aligned the text with a moving edge, and the header row — 1181px
+          of logo, menu, cart, languages and button — does not fit below about
+          1229px. The text column stays on the header's line; the photo, whose
+          scale actually changes, is what adapts.
         */}
         {/*
           The file is square, but the chef stands to the right of it: the left
@@ -85,7 +106,7 @@ export default async function Hero({ locale }: { locale: Locale }) {
           edge, which crops away that empty band and nothing else. The subject
           gains a third of its width without touching the file.
         */}
-        <div className="hero-photo-fade relative z-0 mt-12 aspect-[3/4] w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),-5rem)] xl:mt-0 xl:aspect-square xl:w-auto">
+        <div className="hero-photo-fade relative z-0 mt-12 aspect-[3/4] w-full xl:absolute xl:bottom-0 xl:-top-20 xl:right-[max(calc((80rem-100vw)/2),calc((80rem-var(--hero-frame))/2-5rem))] xl:mt-0 xl:aspect-square xl:w-auto">
           <Image
             src="/photo/tolic/tolic4.jpg"
             alt={dictionary.hero.photoAlt}
@@ -97,7 +118,13 @@ export default async function Hero({ locale }: { locale: Locale }) {
           />
         </div>
 
-        <div className="hidden xl:absolute xl:bottom-14 xl:left-6 xl:block">
+        {/*
+          The indicator shares the bottom of the frame with the social icons,
+          and on a short window there is no longer room for both — they were
+          colliding at 800px and below. It appears only where it fits; the page
+          scrolls perfectly well without an invitation to scroll.
+        */}
+        <div className="hidden xl:absolute xl:bottom-14 xl:left-6 xl:[@media(min-height:900px)]:block">
           <ScrollIndicator locale={locale} />
         </div>
       </Container>

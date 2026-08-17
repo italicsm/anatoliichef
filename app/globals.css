@@ -25,6 +25,28 @@
   --font-signature: var(--font-nautigal);
 }
 
+/*
+ * The width the first screen would deserve at this height.
+ *
+ * The hero is a composition, not a column: its scale is set by the photograph,
+ * and the photograph is exactly as tall as the section. The frame around it,
+ * though, is a constant 1280px — so on a wide but short window the photo shrank
+ * while the frame did not, and the picture drifted away from the text.
+ *
+ * 64/45 is that relationship measured at the reference window, 1600×900:
+ * 1280 ÷ 900. At 900px tall it resolves to exactly 1280 and nothing moves;
+ * below that it returns the narrower frame the composition wants, and Hero uses
+ * the difference to pull the photo back in. It never exceeds 1280, so nothing
+ * on the site ever becomes wider than it is today.
+ *
+ * max(100svh, 44rem) rather than 100svh alone, because the section carries a
+ * min-height: on a very short window the photo stops shrinking, and this has to
+ * stop with it.
+ */
+:root {
+  --hero-frame: min(80rem, calc(max(100svh, 44rem) * 64 / 45));
+}
+
 html {
   scroll-behavior: smooth;
   /* Keeps anchor targets clear of the sticky header. */
